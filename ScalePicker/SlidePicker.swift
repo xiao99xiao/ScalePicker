@@ -104,7 +104,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         
         commonInit()

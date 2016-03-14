@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  ScalePicker
+//  ScalePickerDemo
 //
 //  Created by Dmitry on 14/3/16.
 //  Copyright © 2016 Dmitry Klimkin. All rights reserved.
@@ -8,6 +8,7 @@
 
 import UIKit
 import XLForm
+import ScalePicker
 
 class ViewController: XLFormViewController, ScalePickerDelegate {
     typealias FormButtonHandler = () -> Void

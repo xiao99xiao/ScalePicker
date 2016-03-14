@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ScalePicker.xcodeproj">
+      location = "group:/Users/dmitry/work/ScalePicker/Demo/ScalePickerDemo.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
