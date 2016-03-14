@@ -11,11 +11,10 @@ Generic scale and a handy float-value picker for any iOS app.
 
 ## Preview
 
-<img src="https://raw.githubusercontent.com/kronik/ReadmeFiles/master/ScalePicker/Preview.gif" width="218"/>
-<img src="https://raw.githubusercontent.com/kronik/ReadmeFiles/master/ScalePicker/1.png" width="218"/>
-<img src="https://raw.githubusercontent.com/kronik/ReadmeFiles/master/ScalePicker/2.png" width="218"/>
-<img src="https://raw.githubusercontent.com/kronik/ReadmeFiles/master/ScalePicker/3.png" width="218"/>
-<img src="https://raw.githubusercontent.com/kronik/ReadmeFiles/master/ScalePicker/4.png" width="218"/>
+<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/Preview.gif" width="200"/>
+<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/1.png" width="200"/>
+<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/2.png" width="200"/>
+<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/3.png" width="200"/>
 
 ## Installation
 
