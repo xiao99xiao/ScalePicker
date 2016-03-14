@@ -12,7 +12,7 @@ Generic scale and a handy float-value picker for any iOS app.
 
 ## Preview
 
-<img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/demo.gif" width="100%"/>
+<img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/demo.gif" width="400"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/1.png" width="33%"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/2.png" width="33%"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/3.png" width="33%"/>
