@@ -1,5 +1,5 @@
 PODS:
-  - ScalePicker (1.0.0)
+  - ScalePicker (1.0.1)
   - XLForm (3.1.1)
 
 DEPENDENCIES:
@@ -7,7 +7,7 @@ DEPENDENCIES:
   - XLForm
 
 SPEC CHECKSUMS:
-  ScalePicker: f72dfcacdb269f5cadb3b278a60d128a8123b1d8
+  ScalePicker: bcfcfa7518aa435297f7fcfbe3ae6e30a511b420
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
 
 COCOAPODS: 0.39.0
