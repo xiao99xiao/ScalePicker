@@ -1,5 +1,6 @@
 <p align="center">
     <img src="https://img.shields.io/badge/platform-iOS%208%2B-blue.svg?style=flat" alt="Platform: iOS 8+" />
+<img src="https://img.shields.io/cocoapods/v/ScalePicker.svg?style=flat" />
     <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/language-swift2-f48041.svg?style=flat" alt="Language: Swift 2" /></a>
     <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" /></a>
     <img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="License: MIT" />
@@ -11,7 +12,7 @@ Generic scale and a handy float-value picker for any iOS app.
 
 ## Preview
 
-<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/Preview.gif" width="200"/>
+<img src="https://raw.githubusercontent.com/kronik/Screenshots/master/ScalePicker/Screenshots/demo.gif" width="600"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/1.png" width="200"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/2.png" width="200"/>
 <img src="https://raw.githubusercontent.com/kronik/ScalePicker/master/Screenshots/3.png" width="200"/>
