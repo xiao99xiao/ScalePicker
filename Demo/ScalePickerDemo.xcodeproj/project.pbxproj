@@ -12,6 +12,7 @@
 		0A3517BD1C96767200C58C96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A3517BC1C96767200C58C96 /* Assets.xcassets */; };
 		0A3517C01C96767200C58C96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3517BE1C96767200C58C96 /* LaunchScreen.storyboard */; };
 		0A3517CC1C96785C00C58C96 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3517CB1C96785C00C58C96 /* Utils.swift */; };
+		0A35184F1C979E6000C58C96 /* DemoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A35184E1C979E6000C58C96 /* DemoView.xib */; };
 		CBD71F8EEFC5E9A1A614D12A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B76B50F1516EB691A62C5E6 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,7 @@
 		0A3517C11C96767200C58C96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A3517CB1C96785C00C58C96 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		0A35184D1C96865700C58C96 /* ScalePicker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ScalePicker-Bridging-Header.h"; sourceTree = "<group>"; };
+		0A35184E1C979E6000C58C96 /* DemoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemoView.xib; sourceTree = "<group>"; };
 		17F652E0F74BECC0329BE22E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5BA16ED795AD0FAFB2B4F41A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9B76B50F1516EB691A62C5E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +67,7 @@
 				0A3517BC1C96767200C58C96 /* Assets.xcassets */,
 				0A35184D1C96865700C58C96 /* ScalePicker-Bridging-Header.h */,
 				0A3517BE1C96767200C58C96 /* LaunchScreen.storyboard */,
+				0A35184E1C979E6000C58C96 /* DemoView.xib */,
 				0A3517C11C96767200C58C96 /* Info.plist */,
 				0A3517B51C96767200C58C96 /* AppDelegate.swift */,
 				0A3517B71C96767200C58C96 /* ViewController.swift */,
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A3517C01C96767200C58C96 /* LaunchScreen.storyboard in Resources */,
+				0A35184F1C979E6000C58C96 /* DemoView.xib in Resources */,
 				0A3517BD1C96767200C58C96 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

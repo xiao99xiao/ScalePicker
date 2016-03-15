@@ -13,32 +13,41 @@ public protocol SlidePickerDelegate {
     func didSelectValue(value: CGFloat)
 }
 
+@IBDesignable
 public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     public var delegate: SlidePickerDelegate?
     
-    public var snapEnabled = true
-    public var showTickLabels = true {
+    @IBInspectable
+    public var snapEnabled: Bool = true
+    
+    @IBInspectable
+    public var showTickLabels: Bool = true {
         didSet {
             collectionView.reloadData()
         }
     }
-    public var highlightCenterTick = false
     
-    public var bounces = false {
+    @IBInspectable
+    public var highlightCenterTick: Bool = false
+    
+    @IBInspectable
+    public var bounces: Bool = false {
         didSet {
             collectionView.bounces = bounces
         }
     }
     
+    @IBInspectable
     public var spaceBetweenTicks: CGFloat = 20.0 {
         didSet {
             collectionView.reloadData()
         }
     }
     
+    @IBInspectable
     public var centerViewOffsetY: CGFloat = 0.0 {
         didSet {
-            centerView?.center = CGPointMake(frame.size.width / 2, centerViewOffsetY + (frame.size.height / 2) - 2)
+            layoutSubviews()
         }
     }
 
@@ -58,7 +67,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
 
-    public var tickColor = UIColor.whiteColor() {
+    @IBInspectable
+    public var tickColor: UIColor = UIColor.whiteColor() {
         didSet {
             collectionView.reloadData()
         }
@@ -70,12 +80,14 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
+    @IBInspectable
     public var minValue: CGFloat = 0.0 {
         didSet {
             updateSectionsCount()
         }
     }
     
+    @IBInspectable
     public var maxValue: CGFloat = 0.0 {
         didSet {
             updateSectionsCount()
@@ -96,6 +108,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
+    @IBInspectable
     public var numberOfTicksBetweenValues: UInt = 2 {
         didSet {
             tickValue = 1.0 / CGFloat(numberOfTicksBetweenValues + 1)
@@ -142,6 +155,15 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         super.layoutSubviews()
         
         collectionView.frame = bounds
+        
+        centerView?.center = CGPointMake(frame.size.width / 2,
+                                         centerViewOffsetY + (frame.size.height / 2) - 2)
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        
+        layoutSubviews()
     }
     
     public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -316,7 +338,7 @@ public class SlidePickerCell: UICollectionViewCell {
     
     public var value: CGFloat = 0.0 {
         didSet {
-            let strValue = value.format("0.0")
+            let strValue = String(format: "%0.0f", self.value)
             
             valueLabel.text = "\(strValue)"
         }
@@ -434,14 +456,8 @@ public class SlidePickerCell: UICollectionViewCell {
     }
 }
 
-extension CGFloat {
-    func format(f: String) -> String {
-        return String(format: "%\(f)f", self)
-    }
-}
-
-extension UIImage {
-    public func tintImage(color: UIColor) -> UIImage {
+internal extension UIImage {
+    internal func tintImage(color: UIColor) -> UIImage {
         let scale: CGFloat = 2.0
         
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

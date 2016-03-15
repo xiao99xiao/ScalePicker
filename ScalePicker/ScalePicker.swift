@@ -13,63 +13,93 @@ public protocol ScalePickerDelegate {
     func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
 }
 
+@IBDesignable
 public class ScalePicker: UIView, SlidePickerDelegate {
     
     public var delegate: ScalePickerDelegate?
     
+    @IBInspectable
     public var numberOfTicksBetweenValues: UInt = 4 {
         didSet {
             picker.numberOfTicksBetweenValues = numberOfTicksBetweenValues
-        }
-    }
-
-    public var showTickLabels = true {
-        didSet {
-            picker.showTickLabels = showTickLabels
-            picker.centerViewOffsetY = showTickLabels ? 15 : 10.0
+            reset()
         }
     }
     
-    public var snapEnabled = false {
-        didSet {
-            picker.snapEnabled = snapEnabled
-        }
-    }
-    
-    public var bounces = false {
-        didSet {
-            picker.bounces = bounces
-        }
-    }
-    
+    @IBInspectable
     public var minValue: CGFloat = -3.0 {
         didSet {
             picker.minValue = minValue
+            reset()
         }
     }
     
+    @IBInspectable
     public var maxValue: CGFloat = 3.0 {
         didSet {
             picker.maxValue = maxValue
+            reset()
         }
     }
     
+    @IBInspectable
     public var spaceBetweenTicks: CGFloat = 10.0 {
         didSet {
             picker.spaceBetweenTicks = spaceBetweenTicks
+            reset()
         }
     }
     
-    public var tickColor = UIColor.whiteColor() {
+    @IBInspectable
+    public var centerViewWithLabelsYOffset: CGFloat = 15.0 {
+        didSet {
+            updateCenterViewOffset()
+        }
+    }
+
+    @IBInspectable
+    public var centerViewWithoutLabelsYOffset: CGFloat = 10.0 {
+        didSet {
+            updateCenterViewOffset()
+        }
+    }
+    
+    @IBInspectable
+    public var tickColor: UIColor = UIColor.whiteColor() {
         didSet {
             picker.tickColor = tickColor
             centerImageView.image = centerArrowImage?.tintImage(tickColor)
         }
     }
     
+    @IBInspectable
     public var centerArrowImage: UIImage? {
         didSet {
             centerImageView.image = centerArrowImage
+            reset()
+        }
+    }
+    
+    @IBInspectable
+    public var showTickLabels: Bool = true {
+        didSet {
+            picker.showTickLabels = showTickLabels
+            
+            updateCenterViewOffset()
+        }
+    }
+    
+    @IBInspectable
+    public var snapEnabled: Bool = false {
+        didSet {
+            picker.snapEnabled = snapEnabled
+        }
+    }
+    
+    @IBInspectable
+    public var bounces: Bool = false {
+        didSet {
+            picker.bounces = bounces
         }
     }
     
@@ -77,6 +107,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private var shouldUpdatePicker = true
     private let pickerPadding: CGFloat = 0
     private let centerImageView = UIImageView(frame: CGRectMake(0, 0, 10, 10))
+    private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -107,8 +138,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         userInteractionEnabled = true
         backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
         
-        let centerView = UIView()
-        
         centerImageView.contentMode = .Center
         centerImageView.center = CGPointMake(centerView.frame.size.width / 2, centerView.frame.size.height / 2 + 5)
         
@@ -126,8 +155,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.bounces = bounces
         picker.tickColor = tickColor
         picker.centerView = centerView
-        picker.centerViewOffsetY = showTickLabels ? 15 : 10.0
         picker.spaceBetweenTicks = spaceBetweenTicks
+        
+        updateCenterViewOffset()
         
         addSubview(picker)
         
@@ -142,10 +172,19 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         addGestureRecognizer(tapGesture)
     }
     
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        
+        layoutSubviews()
+        reset()
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         picker.frame = CGRectMake(pickerPadding, 0, frame.size.width - pickerPadding * 2, frame.size.height)
+        
+        picker.layoutSubviews()
     }
     
     public func onDoubleTap(recognizer: UITapGestureRecognizer) {
@@ -184,5 +223,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
         
         shouldUpdatePicker = true
+    }
+    
+    private func updateCenterViewOffset() {
+        picker.centerViewOffsetY = showTickLabels ? centerViewWithLabelsYOffset : centerViewWithoutLabelsYOffset
     }
 }
