@@ -53,7 +53,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
 
     private let cellId = "collectionViewCellId"
 
-    private var flowLayout = UICollectionViewFlowLayout()
+    private var flowLayout = SlidePickerFlowLayout()
     private var collectionView: UICollectionView!
     private var tickValue: CGFloat = 1.0
 
