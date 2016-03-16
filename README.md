@@ -1,4 +1,5 @@
 <p align="center">
+<img src="https://travis-ci.org/kronik/ScalePicker.svg?branch=master" />
     <img src="https://img.shields.io/badge/platform-iOS%208%2B-blue.svg?style=flat" alt="Platform: iOS 8+" />
 <img src="https://img.shields.io/cocoapods/v/ScalePicker.svg?style=flat" />
     <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/language-swift2-f48041.svg?style=flat" alt="Language: Swift 2" /></a>
@@ -41,8 +42,15 @@ pod 'ScalePicker'
 
 Carthage is a lightweight dependency manager for Swift and Objective-C. It leverages CocoaTouch modules and is less invasive than CocoaPods. To install with carthage, follow the instruction on [Carthage](https://github.com/Carthage/Carthage/).
 
-#### Cartfile
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
 ```
+To integrate ScalePicker into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
 github "kronik/ScalePicker"
 ```
 
