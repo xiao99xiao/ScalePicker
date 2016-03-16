@@ -6,7 +6,7 @@
 //  Copyright © 2016 Dmitry Klimkin. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import Foundation;
 
 //! Project version number for ScalePicker.
 FOUNDATION_EXPORT double ScalePickerVersionNumber;
