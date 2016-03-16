@@ -34,7 +34,7 @@ CocoaPods is a dependency manager for Objective-C/Swift, which automates and sim
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'ScalePicker', '~> 1.1.1'
+pod 'ScalePicker'
 ```
 
 ### With Carthage
@@ -43,7 +43,7 @@ Carthage is a lightweight dependency manager for Swift and Objective-C. It lever
 
 #### Cartfile
 ```
-github "kronik/ScalePicker" ~> 1.1.1
+github "kronik/ScalePicker"
 ```
 
 ## Usage

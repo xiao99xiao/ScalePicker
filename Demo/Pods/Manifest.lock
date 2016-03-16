@@ -1,22 +1,13 @@
 PODS:
-  - ScalePicker (1.1.0)
+  - ScalePicker (1.1.1)
   - XLForm (3.1.1)
 
 DEPENDENCIES:
-  - ScalePicker (from `https://github.com/kronik/ScalePicker.git`)
+  - ScalePicker
   - XLForm
 
-EXTERNAL SOURCES:
-  ScalePicker:
-    :git: https://github.com/kronik/ScalePicker.git
-
-CHECKOUT OPTIONS:
-  ScalePicker:
-    :commit: 7b4d7af64e8e1d25f68b68ef3c6853c856072615
-    :git: https://github.com/kronik/ScalePicker.git
-
 SPEC CHECKSUMS:
-  ScalePicker: fd9fbe848044c676c1a8eae41b5adddb40db62e3
+  ScalePicker: 5f3a1fd03e94eea412ed674491881f78ae9cd356
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
 
 COCOAPODS: 0.39.0
