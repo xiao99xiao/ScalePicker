@@ -161,7 +161,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         addSubview(picker)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: "onDoubleTap:")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(_:)))
         
         tapGesture.numberOfTapsRequired = 2
         
