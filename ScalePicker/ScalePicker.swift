@@ -103,6 +103,12 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
+    public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
+        didSet {
+            picker.currentTransform = currentTransform
+        }
+    }
+    
     private var picker: SlidePicker!
     private var shouldUpdatePicker = true
     private let pickerPadding: CGFloat = 0

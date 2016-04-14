@@ -117,6 +117,12 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
+    public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -199,6 +205,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         cell.tickColor = tickColor
         cell.showTickLabels = showTickLabels
         cell.highlightTick = false
+        cell.currentTransform = currentTransform
 
         if indexPath.section == 0 {
             cell.updateValue(CGFloat.min, type: .Empty)
@@ -351,6 +358,12 @@ public class SlidePickerCell: UICollectionViewCell {
     private let strokeWidth: CGFloat = 1.5
     private var bigStrokePaddind: CGFloat = 4.0
     private var smallStrokePaddind: CGFloat = 8.0
+    
+    public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
+        didSet {
+            valueLabel.transform = currentTransform
+        }
+    }
     
     public var tickColor = UIColor.whiteColor() {
         didSet {
