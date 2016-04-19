@@ -182,6 +182,36 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
         
+        row = XLFormRowDescriptor(tag: "gradient", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Gradient")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "YES"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.gradientMaskEnabled = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "fireValuesOnScroll", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Values on scroll")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "YES"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.fireValuesOnScrollEnabled = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)

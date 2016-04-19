@@ -21,12 +21,16 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     public var gradientMaskEnabled: Bool = false {
         didSet {
             layer.mask = gradientMaskEnabled ? maskLayer : nil
+            
             layoutSubviews()
         }
     }
     
     @IBInspectable
     public var snapEnabled: Bool = true
+    
+    @IBInspectable
+    public var fireValuesOnScrollEnabled: Bool = true
     
     @IBInspectable
     public var showTickLabels: Bool = true {
@@ -177,18 +181,20 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
 
         maskLeftLayer.frame = maskLayer.bounds
         maskLeftLayer.colors = [UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor, UIColor.blackColor().CGColor]
-        maskLeftLayer.startPoint = CGPointMake(0.5, 0.0)
-        maskLeftLayer.endPoint = CGPointMake(1.0, 0.0)
+        maskLeftLayer.startPoint = CGPointMake(0.25, 0.0)
+        maskLeftLayer.endPoint = CGPointMake(0.75, 0.0)
 
         maskRightLayer = CAGradientLayer()
         
         maskRightLayer.frame = maskLayer.bounds
         maskRightLayer.colors = [UIColor.blackColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor]
-        maskRightLayer.startPoint = CGPointMake(0.0, 0.0)
-        maskRightLayer.endPoint = CGPointMake(0.5, 0.0)
+        maskRightLayer.startPoint = CGPointMake(0.25, 0.0)
+        maskRightLayer.endPoint = CGPointMake(0.75, 0.0)
 
         maskLayer.addSublayer(maskLeftLayer)
         maskLayer.addSublayer(maskRightLayer)
+        
+//        layer.addSublayer(maskLayer)
     }
    
     public override func layoutSubviews() {
@@ -281,17 +287,15 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        updateSelectedValue()
+        updateSelectedValue(true)
     }
     
     public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        updateSelectedValue()
+        updateSelectedValue(true)
     }
     
     public func scrollViewDidScroll(scrollView: UIScrollView) {
-        if !snapEnabled {
-            updateSelectedValue()
-        }
+        updateSelectedValue(false)
     }
     
     public func scrollToValue(value: CGFloat, animated: Bool) {
@@ -329,12 +333,12 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         scrollToNearestCellAtPoint(point)
     }
     
-    private func updateSelectedValue() {
+    private func updateSelectedValue(tryToSnap: Bool) {
         if snapEnabled {
             let initialPinchPoint = CGPointMake(collectionView.center.x + collectionView.contentOffset.x,
                                                 collectionView.center.y + collectionView.contentOffset.y)
-
-            scrollToNearestCellAtPoint(initialPinchPoint)
+            
+            scrollToNearestCellAtPoint(initialPinchPoint, skipScroll: fireValuesOnScrollEnabled && !tryToSnap)
         } else {
             let percent = collectionView.contentOffset.x / (collectionView.contentSize.width - bounds.width)
             let absoluteValue = percent * (maxValue - minValue)
@@ -344,7 +348,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    private func scrollToNearestCellAtPoint(point: CGPoint) {
+    private func scrollToNearestCellAtPoint(point: CGPoint, skipScroll: Bool = false) {
         var centerCell: SlidePickerCell?
         
         let indexPath = collectionView.indexPathForItemAtPoint(point)
@@ -362,7 +366,10 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
         
         delegate?.didSelectValue(cell.value)
-        collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: true)
+        
+        if !skipScroll {
+            collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: true)
+        }
     }
 }
 

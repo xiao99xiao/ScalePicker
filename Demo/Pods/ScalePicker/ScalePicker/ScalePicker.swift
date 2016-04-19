@@ -104,6 +104,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var fireValuesOnScrollEnabled: Bool = true {
+        didSet {
+            picker.fireValuesOnScrollEnabled = fireValuesOnScrollEnabled
+        }
+    }
+    
+    @IBInspectable
     public var bounces: Bool = false {
         didSet {
             picker.bounces = bounces
