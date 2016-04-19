@@ -212,6 +212,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
         
+        row = XLFormRowDescriptor(tag: "showPositiveSign", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show positive sign")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "YES"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.showPlusForPositiveValues = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)

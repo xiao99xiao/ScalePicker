@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A2123621CC66D4900A61A72 /* ScalePicker.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = ScalePicker.podspec; path = ../../ScalePicker.podspec; sourceTree = "<group>"; };
 		0A3517B21C96767200C58C96 /* ScalePickerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScalePickerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3517B51C96767200C58C96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0A3517B71C96767200C58C96 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				0A3517BC1C96767200C58C96 /* Assets.xcassets */,
+				0A2123621CC66D4900A61A72 /* ScalePicker.podspec */,
 				0A35184D1C96865700C58C96 /* ScalePicker-Bridging-Header.h */,
 				0A3517BE1C96767200C58C96 /* LaunchScreen.storyboard */,
 				0A35184E1C979E6000C58C96 /* DemoView.xib */,

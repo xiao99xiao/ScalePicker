@@ -27,6 +27,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
+    public var showPlusForPositiveValues: Bool = true {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    @IBInspectable
     public var snapEnabled: Bool = true
     
     @IBInspectable
@@ -258,6 +265,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         cell.showTickLabels = showTickLabels
         cell.highlightTick = false
         cell.currentTransform = currentTransform
+        cell.showPlusForPositiveValues = showPlusForPositiveValues
 
         if indexPath.section == 0 {
             cell.updateValue(CGFloat.min, type: .Empty)
@@ -380,6 +388,17 @@ public enum SlidePickerCellType {
 }
 
 public class SlidePickerCell: UICollectionViewCell {
+    public static var signWidth: CGFloat = {
+        let sign = "-"
+        let maximumTextSize = CGSizeMake(100, 100)
+        let textString = sign as NSString
+        let font = UIFont.systemFontOfSize(12.0)
+        
+        let rect = textString.boundingRectWithSize(maximumTextSize, options: .UsesLineFragmentOrigin,
+                                                   attributes: [NSFontAttributeName: font], context: nil)
+
+        return (rect.width / 2) + 1
+    }()
     
     public var showTickLabels = true {
         didSet {
@@ -388,19 +407,20 @@ public class SlidePickerCell: UICollectionViewCell {
         }
     }
     
+    public var showPlusForPositiveValues = true
     public var highlightTick = false
 
-    private var type = SlidePickerCellType.Empty {
-        didSet {
-            
-        }
-    }
+    private var type = SlidePickerCellType.Empty
     
     public var value: CGFloat = 0.0 {
         didSet {
-            let strValue = String(format: "%0.0f", self.value)
+            let strValue = String(format: "%0.0f", value)
             
-            valueLabel.text = "\(strValue)"
+            if value > 0.00001 && showPlusForPositiveValues {
+                valueLabel.text = "+" + strValue
+            } else {
+                valueLabel.text = strValue
+            }
         }
     }
     
@@ -470,6 +490,7 @@ public class SlidePickerCell: UICollectionViewCell {
         super.layoutSubviews()
         
         let height = frame.size.height
+        let xShift: CGFloat = (showPlusForPositiveValues && value > 0.0001) || value < -0.0001 ? SlidePickerCell.signWidth : 0.0
         
         switch type {
             case .Empty:
@@ -484,7 +505,7 @@ public class SlidePickerCell: UICollectionViewCell {
                 valueLabel.alpha = showTickLabels ? 1.0 : 0.0
                 
                 if showTickLabels {
-                    valueLabel.frame = CGRectMake(-5, 0, frame.size.width + 10, height / 3)
+                    valueLabel.frame = CGRectMake(-5 - xShift, 0, frame.size.width + 10, height / 3)
                     
                     strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
                                                   (height / 3) + bigStrokePaddind, strokeWidth + widthAddition * 2,
@@ -507,7 +528,7 @@ public class SlidePickerCell: UICollectionViewCell {
                 valueLabel.frame = CGRectZero
 
                 if showTickLabels {
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
+                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - xShift,
                                                   (height / 3) + smallStrokePaddind, strokeWidth,
                                                   (height / 2) - (smallStrokePaddind * 2))
                     

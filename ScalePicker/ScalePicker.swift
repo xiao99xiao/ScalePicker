@@ -104,6 +104,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var showPlusForPositiveValues: Bool = true {
+        didSet {
+            picker.showPlusForPositiveValues = showPlusForPositiveValues
+        }
+    }
+    
+    @IBInspectable
     public var fireValuesOnScrollEnabled: Bool = true {
         didSet {
             picker.fireValuesOnScrollEnabled = fireValuesOnScrollEnabled
