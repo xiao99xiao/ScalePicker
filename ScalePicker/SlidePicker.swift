@@ -16,6 +16,14 @@ public protocol SlidePickerDelegate {
 @IBDesignable
 public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     public var delegate: SlidePickerDelegate?
+
+    @IBInspectable
+    public var gradientMaskEnabled: Bool = false {
+        didSet {
+            layer.mask = gradientMaskEnabled ? maskLayer : nil
+            layoutSubviews()
+        }
+    }
     
     @IBInspectable
     public var snapEnabled: Bool = true
@@ -56,6 +64,10 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     private var flowLayout = SlidePickerFlowLayout()
     private var collectionView: UICollectionView!
     private var tickValue: CGFloat = 1.0
+    
+    private var maskLayer: CALayer!
+    private var maskLeftLayer: CAGradientLayer!
+    private var maskRightLayer: CAGradientLayer!
 
     public var centerView: UIView? {
         didSet {
@@ -155,6 +167,28 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         collectionView.registerClass(SlidePickerCell.self, forCellWithReuseIdentifier: cellId)
         
         addSubview(collectionView)
+        
+        maskLayer = CALayer()
+        
+        maskLayer.frame = CGRectZero
+        maskLayer.backgroundColor = UIColor.clearColor().CGColor
+        
+        maskLeftLayer = CAGradientLayer()
+
+        maskLeftLayer.frame = maskLayer.bounds
+        maskLeftLayer.colors = [UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor, UIColor.blackColor().CGColor]
+        maskLeftLayer.startPoint = CGPointMake(0.5, 0.0)
+        maskLeftLayer.endPoint = CGPointMake(1.0, 0.0)
+
+        maskRightLayer = CAGradientLayer()
+        
+        maskRightLayer.frame = maskLayer.bounds
+        maskRightLayer.colors = [UIColor.blackColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor]
+        maskRightLayer.startPoint = CGPointMake(0.0, 0.0)
+        maskRightLayer.endPoint = CGPointMake(0.5, 0.0)
+
+        maskLayer.addSublayer(maskLeftLayer)
+        maskLayer.addSublayer(maskRightLayer)
     }
    
     public override func layoutSubviews() {
@@ -164,6 +198,18 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         
         centerView?.center = CGPointMake(frame.size.width / 2,
                                          centerViewOffsetY + (frame.size.height / 2) - 2)
+        
+        if gradientMaskEnabled {
+            let gradientMaskWidth = frame.size.width / 2
+            
+            maskLayer.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)
+            maskLeftLayer.frame = CGRect(x: 0, y: 0, width: gradientMaskWidth, height: frame.size.height)
+            maskRightLayer.frame = CGRect(x: frame.size.width - gradientMaskWidth, y: 0, width: gradientMaskWidth, height: frame.size.height)
+        } else {
+            maskLayer.frame = CGRectZero
+            maskLeftLayer.frame = maskLayer.bounds
+            maskRightLayer.frame = maskLayer.bounds
+        }
     }
     
     public override func prepareForInterfaceBuilder() {

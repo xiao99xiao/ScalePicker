@@ -19,6 +19,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public var delegate: ScalePickerDelegate?
     
     @IBInspectable
+    public var gradientMaskEnabled: Bool = false {
+        didSet {
+            picker.gradientMaskEnabled = gradientMaskEnabled
+        }
+    }
+    
+    @IBInspectable
     public var numberOfTicksBetweenValues: UInt = 4 {
         didSet {
             picker.numberOfTicksBetweenValues = numberOfTicksBetweenValues
