@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 public typealias ValueFormatter = (CGFloat) -> NSAttributedString
+public typealias ValueChangeHandler = (CGFloat) -> Void
 
 public protocol ScalePickerDelegate {
     func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
@@ -19,6 +20,10 @@ public protocol ScalePickerDelegate {
 public class ScalePicker: UIView, SlidePickerDelegate {
     
     public var delegate: ScalePickerDelegate?
+    
+    public var valueChangeHandler: ValueChangeHandler = {(value: CGFloat) in
+    
+    }
     
     @IBInspectable
     public var title: String = "" {
@@ -305,6 +310,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public func reset() {
         currentValue = 0.0
         delegate?.didChangeScaleValue(self, value: currentValue)
+        valueChangeHandler(currentValue)
     }
     
     public func increaseValue() {
@@ -331,6 +337,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         if value != currentValue {
             currentValue = value
             delegate?.didChangeScaleValue(self, value: value)
+            valueChangeHandler(value)
         }
         
         shouldUpdatePicker = true
