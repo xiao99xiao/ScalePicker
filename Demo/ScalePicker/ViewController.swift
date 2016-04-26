@@ -42,7 +42,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.tickColor = UIColor.whiteColor()
         scaleView.centerArrowImage = UIImage(named: "arrowPointer")
         scaleView.gradientMaskEnabled = true
-        
+        scaleView.blockedUI = false
         scaleView.sidePadding = 20.0
         scaleView.pickerPadding = 10.0
         scaleView.title = "Speed"

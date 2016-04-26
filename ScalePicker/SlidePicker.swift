@@ -27,6 +27,19 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
+    public var blockedUI: Bool = false {
+        didSet {
+            uiBlockView.removeFromSuperview()
+            
+            if blockedUI {
+                addSubview(uiBlockView)
+            }
+            
+            layoutSubviews()
+        }
+    }
+    
+    @IBInspectable
     public var showPlusForPositiveValues: Bool = true {
         didSet {
             collectionView.reloadData()
@@ -79,6 +92,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     private var maskLayer: CALayer!
     private var maskLeftLayer: CAGradientLayer!
     private var maskRightLayer: CAGradientLayer!
+    private var uiBlockView: UIView!
 
     public var centerView: UIView? {
         didSet {
@@ -201,6 +215,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         maskLayer.addSublayer(maskLeftLayer)
         maskLayer.addSublayer(maskRightLayer)
         
+        uiBlockView = UIView(frame: self.bounds)
+        
 //        layer.addSublayer(maskLayer)
     }
    
@@ -223,6 +239,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             maskLeftLayer.frame = maskLayer.bounds
             maskRightLayer.frame = maskLayer.bounds
         }
+        
+        uiBlockView.frame = bounds
     }
     
     public override func prepareForInterfaceBuilder() {

@@ -50,6 +50,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var blockedUI: Bool = false {
+        didSet {
+            picker.blockedUI = blockedUI
+        }
+    }
+    
+    @IBInspectable
     public var numberOfTicksBetweenValues: UInt = 4 {
         didSet {
             picker.numberOfTicksBetweenValues = numberOfTicksBetweenValues
