@@ -537,6 +537,8 @@ public class SlidePickerCell: UICollectionViewCell {
                                                   (height / 2) - (bigStrokePaddind * 2))
                 }
                 
+                strokeView.layer.cornerRadius = strokeView.frame.width
+                
                 break
 
             case .SmallStroke:
@@ -546,16 +548,19 @@ public class SlidePickerCell: UICollectionViewCell {
                 valueLabel.frame = CGRectZero
 
                 if showTickLabels {
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - xShift,
+                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
                                                   (height / 3) + smallStrokePaddind, strokeWidth,
                                                   (height / 2) - (smallStrokePaddind * 2))
                     
-                    valueLabel.frame = CGRectMake(0, 0, frame.size.width, height / 2)
+                    valueLabel.frame = CGRectMake(-xShift, 0, frame.size.width, height / 2)
                 } else {
                     strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
                                                   (height / 8) + smallStrokePaddind, strokeWidth,
                                                   (height / 2) - (smallStrokePaddind * 2))
                 }
+                
+                strokeView.layer.cornerRadius = strokeView.frame.width
+                
                 break
         }
     }
