@@ -235,7 +235,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         commonInit()
     }
     
-    private func commonInit() {
+    internal func commonInit() {
         userInteractionEnabled = true
         backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
         
