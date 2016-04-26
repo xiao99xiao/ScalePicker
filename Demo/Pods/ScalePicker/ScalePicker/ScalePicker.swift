@@ -174,8 +174,12 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
         didSet {
-            picker.currentTransform = currentTransform
+            applyCurrentTransform()
         }
+    }
+    
+    public func applyCurrentTransform() {
+        picker.currentTransform = currentTransform
     }
     
     public var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
@@ -235,7 +239,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         commonInit()
     }
     
-    internal func commonInit() {
+    public func commonInit() {
         userInteractionEnabled = true
         backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
         

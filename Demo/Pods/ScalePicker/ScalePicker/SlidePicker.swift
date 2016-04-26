@@ -172,7 +172,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         commonInit()
     }
     
-    internal func commonInit() {
+    public func commonInit() {
         userInteractionEnabled = true
         
         flowLayout.scrollDirection = .Horizontal
