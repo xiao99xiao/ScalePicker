@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name = 'ScalePicker'
-    s.version = '1.4.1'
+    s.version = '1.4.3'
     s.platform = :ios, '8.0'
     s.license = 'MIT'
     s.homepage = 'https://github.com/kronik/ScalePicker'
