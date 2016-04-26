@@ -14,6 +14,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
     typealias FormButtonHandler = () -> Void
 
     private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 50))
+    private let rightButton = UIButton(type: .Custom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,12 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         headerView.userInteractionEnabled = true
         headerView.backgroundColor = Utils.BackgroundColor
+        
+        rightButton.frame = CGRectMake(0, 0, 44, 44)
+        
+        rightButton.setImage(UIImage(named: "speedAuto"), forState: .Normal)
+        rightButton.setImage(UIImage(named: "speedManual"), forState: .Selected)
+        rightButton.setImage(UIImage(named: "speedManual"), forState: .Highlighted)
         
         scaleView.center = CGPointMake(headerView.frame.size.width / 2, headerView.frame.size.height / 2)
         scaleView.minValue = -3.0
@@ -35,7 +42,29 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.tickColor = UIColor.whiteColor()
         scaleView.centerArrowImage = UIImage(named: "arrowPointer")
         scaleView.gradientMaskEnabled = true
+        
+        scaleView.sidePadding = 20.0
+        scaleView.pickerPadding = 10.0
+        scaleView.title = "Speed"
+        scaleView.showCurrentValue = false
+        scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
+            let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
+                         NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
+            
+            let text = value.format(".2") + " auto"
+            let attrText = NSMutableAttributedString(string: text, attributes: attrs)
 
+            if let range = text.rangeOfString("auto") {
+                let rangeValue = text.NSRangeFromRange(range)
+                
+                attrText.addAttribute(NSForegroundColorAttributeName, value:UIColor.orangeColor(), range:rangeValue)
+            }
+            
+            return attrText
+        }
+        
+        scaleView.rightView = rightButton
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC))), dispatch_get_main_queue()) {
             self.scaleView.setInitialCurrentValue(0.0)
         }
@@ -227,6 +256,82 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
         
+        row = XLFormRowDescriptor(tag: "sidePadding", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Side padding")
+        
+        row.selectorOptions = ["0", "20", "50"]
+        row.value = "20"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? NSString
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.sidePadding = CGFloat(updatedValue.floatValue)
+            }
+        }
+        
+        section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "pickerPadding", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Picker padding")
+        
+        row.selectorOptions = ["0", "10", "50"]
+        row.value = "10"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? NSString
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.pickerPadding = CGFloat(updatedValue.floatValue)
+            }
+        }
+        
+        section.addFormRow(row)
+        
+        row = XLFormRowDescriptor(tag: "title", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Title")
+        
+        row.selectorOptions = ["Speed", "Empty"]
+        row.value = "Speed"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? NSString
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.title = updatedValue == "Speed" ? (updatedValue as String) : ""
+            }
+        }
+        
+        section.addFormRow(row)
+        
+        row = XLFormRowDescriptor(tag: "showValue", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show value")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.showCurrentValue = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "showRightButton", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show right view")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "YES"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.rightView = updatedValue == "YES" ? self.rightButton : nil
+            }
+        }
+        
+        section.addFormRow(row)
+
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)
@@ -269,5 +374,18 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
     }
 }
 
+private extension CGFloat {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
 
+private extension String {
+    func NSRangeFromRange(range : Range<String.Index>) -> NSRange {
+        let utf16view = self.utf16
+        let from = String.UTF16View.Index(range.startIndex, within: utf16view)
+        let to = String.UTF16View.Index(range.endIndex, within: utf16view)
+        return NSMakeRange(utf16view.startIndex.distanceTo(from), from.distanceTo(to))
+    }
+}
 

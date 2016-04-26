@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+public typealias ValueFormatter = (CGFloat) -> NSAttributedString
+
 public protocol ScalePickerDelegate {
     func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
 }
@@ -19,9 +21,26 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public var delegate: ScalePickerDelegate?
     
     @IBInspectable
+    public var title: String = "" {
+        didSet {
+            titleLabel.text = title
+        }
+    }
+    
+    @IBInspectable
     public var gradientMaskEnabled: Bool = false {
         didSet {
             picker.gradientMaskEnabled = gradientMaskEnabled
+        }
+    }
+    
+    @IBInspectable
+    public var showCurrentValue: Bool = false {
+        didSet {
+            valueLabel.alpha = showCurrentValue ? 1.0 : 0.0
+            
+            showTickLabels = !showTickLabels
+            showTickLabels = !showTickLabels
         }
     }
     
@@ -76,6 +95,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         didSet {
             picker.tickColor = tickColor
             centerImageView.image = centerArrowImage?.tintImage(tickColor)
+            titleLabel.textColor = tickColor
         }
     }
     
@@ -93,6 +113,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             picker.showTickLabels = showTickLabels
             
             updateCenterViewOffset()
+            
+            layoutSubviews()
         }
     }
     
@@ -124,17 +146,55 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
+    @IBInspectable
+    public var sidePadding: CGFloat = 0.0 {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    @IBInspectable
+    public var pickerPadding: CGFloat = 0.0 {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
     public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
         didSet {
             picker.currentTransform = currentTransform
         }
     }
     
+    public var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
+        let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
+                     NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
+        
+        return NSMutableAttributedString(string: value.format(".2"), attributes: attrs)
+    }
+    
+    public var rightView: UIView? {
+        willSet(newRightView) {
+            if let view = rightView {
+                view.removeFromSuperview()
+            }
+        }
+        
+        didSet {
+            if let view = rightView {
+                addSubview(view)
+            }
+
+            layoutSubviews()
+        }
+    }
+    
     private var picker: SlidePicker!
     private var shouldUpdatePicker = true
-    private let pickerPadding: CGFloat = 0
     private let centerImageView = UIImageView(frame: CGRectMake(0, 0, 10, 10))
     private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
+    private let titleLabel = UILabel()
+    private let valueLabel = UILabel()
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -146,6 +206,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
                 
                 picker.snapEnabled = snapEnabled
             }
+            
+            valueLabel.attributedText = valueFormatter(currentValue)
         }
     }
     
@@ -164,6 +226,18 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private func commonInit() {
         userInteractionEnabled = true
         backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
+        
+        titleLabel.textColor = tickColor
+        titleLabel.textAlignment = .Left
+        titleLabel.font = UIFont.systemFontOfSize(13.0)
+        
+        addSubview(titleLabel)
+        
+        valueLabel.textColor = tickColor
+        valueLabel.textAlignment = .Center
+        valueLabel.font = UIFont.systemFontOfSize(13.0)
+        
+        addSubview(valueLabel)
         
         centerImageView.contentMode = .Center
         centerImageView.center = CGPointMake(centerView.frame.size.width / 2, centerView.frame.size.height / 2 + 5)
@@ -187,7 +261,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         updateCenterViewOffset()
         
         addSubview(picker)
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(_:)))
         
         tapGesture.numberOfTapsRequired = 2
@@ -204,10 +278,24 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
-        picker.frame = CGRectMake(pickerPadding, 0, frame.size.width - pickerPadding * 2, frame.size.height)
+
+        valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 0,
+                                      frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 3.0)
+        if showCurrentValue {
+            picker.frame = CGRectMake(pickerPadding + sidePadding, frame.size.height / 3.0,
+                                      frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height * 2.0 / 3.0)
+        } else {
+            picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
+                                      frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
+        }
         
         picker.layoutSubviews()
+        
+        titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
+        
+        if let view = rightView {
+            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, frame.size.height / 2)
+        }
     }
     
     public func onDoubleTap(recognizer: UITapGestureRecognizer) {
@@ -250,5 +338,23 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     private func updateCenterViewOffset() {
         picker.centerViewOffsetY = showTickLabels ? centerViewWithLabelsYOffset : centerViewWithoutLabelsYOffset
+    }
+}
+
+private extension Double {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
+
+private extension Float {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
+
+private extension CGFloat {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
     }
 }
