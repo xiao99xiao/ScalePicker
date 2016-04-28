@@ -96,7 +96,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
 
     @IBInspectable
-    public var centerViewWithoutLabelsYOffset: CGFloat = 10.0 {
+    public var centerViewWithoutLabelsYOffset: CGFloat = 15.0 {
         didSet {
             updateCenterViewOffset()
         }
@@ -241,7 +241,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public func commonInit() {
         userInteractionEnabled = true
-        backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
         
         titleLabel.textColor = tickColor
         titleLabel.textAlignment = .Left
@@ -296,15 +295,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         super.layoutSubviews()
 
         valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 0,
-                                      frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 3.0)
-        if showCurrentValue {
-            picker.frame = CGRectMake(pickerPadding + sidePadding, frame.size.height / 3.0,
-                                      frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height * 2.0 / 3.0)
-        } else {
-            picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
-                                      frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
-        }
-        
+                                      frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
+        picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
+                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
         picker.layoutSubviews()
         
         titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)

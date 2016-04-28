@@ -418,13 +418,7 @@ public class SlidePickerCell: UICollectionViewCell {
         return (rect.width / 2) + 1
     }()
     
-    public var showTickLabels = true {
-        didSet {
-            bigStrokePaddind = showTickLabels ?   4.0 : 2.5
-            smallStrokePaddind = showTickLabels ? 8.0 : 6.0
-        }
-    }
-    
+    public var showTickLabels = true
     public var showPlusForPositiveValues = true
     public var highlightTick = false
 
@@ -524,19 +518,14 @@ public class SlidePickerCell: UICollectionViewCell {
                 
                 if showTickLabels {
                     valueLabel.frame = CGRectMake(-5 - xShift, 0, frame.size.width + 10, height / 3)
-                    
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
-                                                  (height / 3) + bigStrokePaddind, strokeWidth + widthAddition * 2,
-                                                  (height / 2) - (bigStrokePaddind * 2))
-                    
                 } else {
                     valueLabel.frame = CGRectZero
-                    
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
-                                                  (height / 8) + bigStrokePaddind, strokeWidth + widthAddition * 2,
-                                                  (height / 2) - (bigStrokePaddind * 2))
                 }
                 
+                strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
+                                              (height / 3) + bigStrokePaddind, strokeWidth + widthAddition * 2,
+                                              (height / 2) - (bigStrokePaddind * 2))
+
                 strokeView.layer.cornerRadius = strokeView.frame.width
                 
                 break
@@ -545,19 +534,15 @@ public class SlidePickerCell: UICollectionViewCell {
                 strokeView.alpha = 1.0
                 valueLabel.alpha = 0.0
                 
-                valueLabel.frame = CGRectZero
-
                 if showTickLabels {
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
-                                                  (height / 3) + smallStrokePaddind, strokeWidth,
-                                                  (height / 2) - (smallStrokePaddind * 2))
-                    
                     valueLabel.frame = CGRectMake(-xShift, 0, frame.size.width, height / 2)
                 } else {
-                    strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
-                                                  (height / 8) + smallStrokePaddind, strokeWidth,
-                                                  (height / 2) - (smallStrokePaddind * 2))
+                    valueLabel.frame = CGRectZero
                 }
+                
+                strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
+                                              (height / 3) + smallStrokePaddind, strokeWidth,
+                                              (height / 2) - (smallStrokePaddind * 2))
                 
                 strokeView.layer.cornerRadius = strokeView.frame.width
                 

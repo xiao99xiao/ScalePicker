@@ -13,7 +13,7 @@ import ScalePicker
 class ViewController: XLFormViewController, ScalePickerDelegate {
     typealias FormButtonHandler = () -> Void
 
-    private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 50))
+    private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 60))
     private let rightButton = UIButton(type: .Custom)
 
     override func viewDidLoad() {
