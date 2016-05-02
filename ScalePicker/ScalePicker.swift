@@ -182,6 +182,18 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.currentTransform = currentTransform
     }
     
+    public var values: [CGFloat]? {
+        didSet {
+            guard let values = values where values.count > 1 else { return; }
+            
+            picker.values = values
+            
+            maxValue = values[values.count - 1]
+            minValue = values[0]
+            initialValue = values[0]
+        }
+    }
+    
     public var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
         let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
                      NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
@@ -211,6 +223,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
+    private var initialValue: CGFloat = 0.0
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -312,7 +325,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     public func reset() {
-        currentValue = 0.0
+        currentValue = initialValue
         delegate?.didChangeScaleValue(self, value: currentValue)
         valueChangeHandler(currentValue)
     }
@@ -329,6 +342,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         shouldUpdatePicker = false
         
         currentValue = value
+        initialValue = value
         
         picker.scrollToValue(value, animated: false)
         

@@ -103,6 +103,16 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             }
         }
     }
+    
+    public var values: [CGFloat]? {
+        didSet {
+            guard let values = values where values.count > 1 else { return; }
+            
+            updateSectionsCount()
+
+            collectionView.reloadData()
+        }
+    }
 
     @IBInspectable
     public var tickColor: UIColor = UIColor.whiteColor() {
@@ -136,12 +146,22 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             return
         }
         
-        let items = maxValue - minValue + 1.0
-        
-        if items > 1 {
-            sectionsCount = Int(items) + 2
+        if let values = values {
+            var sections = (values.count / Int(numberOfTicksBetweenValues + 1)) + 2
+            
+            if values.count % Int(numberOfTicksBetweenValues + 1) > 0 {
+                sections += 1
+            }
+            
+            sectionsCount = sections
         } else {
-            sectionsCount = 0
+            let items = maxValue - minValue + 1.0
+            
+            if items > 1 {
+                sectionsCount = Int(items) + 2
+            } else {
+                sectionsCount = 0
+            }
         }
     }
     
@@ -267,10 +287,25 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             return 0
         }
         
-        if (section == 0) || (section >= (sectionsCount - 2)) {
+        if (section == 0) || (section >= (sectionsCount - 1)) {
             return 1
         } else {
-            return Int(numberOfTicksBetweenValues) + 1
+            if let values = values {
+                let elements = (section - 1) * Int(numberOfTicksBetweenValues + 1)
+                let rows = values.count - elements
+                
+                if rows > 0 {
+                    return min(rows, Int(numberOfTicksBetweenValues + 1))
+                } else {
+                    return 0
+                }
+            } else {
+                if section >= (sectionsCount - 2) {
+                    return 1
+                } else {
+                    return Int(numberOfTicksBetweenValues) + 1
+                }
+            }
         }
     }
 
@@ -290,18 +325,27 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         } else if indexPath.section == sectionsCount - 1 {
             cell.updateValue(CGFloat.max, type: .Empty)
         } else {
-            let currentValue = minValue + CGFloat(indexPath.section - 1)
-
-            if indexPath.row == 0 {
-                if highlightCenterTick {
-                    cell.highlightTick = (currentValue == ((maxValue - minValue) * 0.5 + minValue))
-                } else {
-                    cell.highlightTick = false
-                }
+            if let values = values {
+                cell.highlightTick = false
                 
-                cell.updateValue(currentValue, type: .BigStroke)
+                let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
+                let currentValue = values[index]
+                
+                cell.updateValue(currentValue, type: indexPath.row == 0 ? .BigStroke : .SmallStroke)
             } else {
-                cell.updateValue(currentValue + tickValue * CGFloat(indexPath.row), type: .SmallStroke)
+                let currentValue = minValue + CGFloat(indexPath.section - 1)
+
+                if indexPath.row == 0 {
+                    if highlightCenterTick {
+                        cell.highlightTick = (currentValue == ((maxValue - minValue) * 0.5 + minValue))
+                    } else {
+                        cell.highlightTick = false
+                    }
+                    
+                    cell.updateValue(currentValue, type: .BigStroke)
+                } else {
+                    cell.updateValue(currentValue + tickValue * CGFloat(indexPath.row), type: .SmallStroke)
+                }
             }
         }
         

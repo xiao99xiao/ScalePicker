@@ -35,7 +35,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.maxValue = 3.0
         scaleView.numberOfTicksBetweenValues = 2
         scaleView.spaceBetweenTicks = 20.0
-        scaleView.showTickLabels = true
+        scaleView.showTickLabels = false
         scaleView.delegate = self
         scaleView.snapEnabled = true
         scaleView.bounces = false
@@ -46,7 +46,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.sidePadding = 20.0
         scaleView.pickerPadding = 10.0
         scaleView.title = "Speed"
-        scaleView.showCurrentValue = false
+        scaleView.showCurrentValue = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
             let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
                          NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
@@ -64,6 +64,9 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         }
         
         scaleView.rightView = rightButton
+        
+        // Optionally you can set array of values for scale
+//        scaleView.values = [0.0, 10.0, 40.0, 80.0, 300.0, 500.0, 1000.0, 100000.0]
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC))), dispatch_get_main_queue()) {
             self.scaleView.setInitialCurrentValue(0.0)
@@ -148,7 +151,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         row = XLFormRowDescriptor(tag: "show ticks", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show ticks' labels")
         
         row.selectorOptions = ["YES", "NO"]
-        row.value = "YES"
+        row.value = "NO"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? String
@@ -304,7 +307,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         row = XLFormRowDescriptor(tag: "showValue", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show value")
         
         row.selectorOptions = ["YES", "NO"]
-        row.value = "NO"
+        row.value = "YES"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? String
