@@ -66,10 +66,10 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.rightView = rightButton
         
         // Optionally you can set array of values for scale
-//        scaleView.values = [0.0, 10.0, 40.0, 80.0, 300.0, 500.0, 1000.0, 100000.0]
-        
+//        scaleView.values = [32, 40, 50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600]
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-            self.scaleView.setInitialCurrentValue(0.0)
+            self.scaleView.setInitialCurrentValue(0)
         }
         
         headerView.addSubview(scaleView)

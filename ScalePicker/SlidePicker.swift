@@ -375,16 +375,39 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             return
         }
         
-        for i in 1 ... sectionsCount - 1 {
-            indexPath = NSIndexPath(forRow: 0, inSection: i)
+        if let values = values {
+            var valueIndex = 0
+            
+            for index in 0..<values.count {
+                if value == values[index] {
+                    valueIndex = index
+                    break
+                }
+            }
+            
+            let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
+            let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
+
+            indexPath = NSIndexPath(forRow: row, inSection: section + 1)
             
             let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
             
             if let cell = cell where cell.value == value {
                 delegate?.didSelectValue(cell.value)
                 collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+            }
+        } else {
+            for i in 1 ... sectionsCount - 1 {
+                indexPath = NSIndexPath(forRow: 0, inSection: i)
                 
-                break
+                let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
+                
+                if let cell = cell where cell.value == value {
+                    delegate?.didSelectValue(cell.value)
+                    collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                    
+                    break
+                }
             }
         }
     }
