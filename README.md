@@ -5,7 +5,7 @@
     <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat" alt="Language: Swift 2.2" /></a>
     <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" /></a>
     <img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="License: MIT" />
-    [![Twitter](http://img.shields.io/badge/contact-@dklimkin-blue.svg?style=flat)](http://twitter.com/dklimkin)
+    <a href="https://twitter.com/dklimkin"><src="http://img.shields.io/badge/contact-@dklimkin-blue.svg?style=flat"/></a>
 </p>
 
 # ScalePicker
