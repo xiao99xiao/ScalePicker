@@ -5,6 +5,7 @@
     <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat" alt="Language: Swift 2.2" /></a>
     <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" /></a>
     <img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="License: MIT" />
+    [![Twitter](http://img.shields.io/badge/contact-@dklimkin-blue.svg?style=flat)](http://twitter.com/dklimkin)
 </p>
 
 # ScalePicker
@@ -151,6 +152,15 @@ In addition to increase/decrease/reset actions ScaleView allows you to double ta
 ### More
 
 For more details try Xcode [Demo project](https://github.com/kronik/ScalePicker/blob/master/Demo)
+
+# Etc.
+
+* Contributions are very welcome.
+* Attribution is appreciated (let's spread the word!), but not mandatory.
+
+## Use it? Love/hate it?
+
+Tweet the author [@dklimkin](http://twitter.com/dklimkin), and check out Dmitry's portfolio: http://dmitry-klimkin.com
 
 ## License
 
