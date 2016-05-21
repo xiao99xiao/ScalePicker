@@ -15,6 +15,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
 
     private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 60))
     private let rightButton = UIButton(type: .Custom)
+    private let leftButton = UIButton(type: .Custom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,9 +27,15 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         rightButton.frame = CGRectMake(0, 0, 44, 44)
         
-        rightButton.setImage(UIImage(named: "speedAuto"), forState: .Normal)
+        rightButton.setImage(UIImage(named: "speedAuto"),   forState: .Normal)
         rightButton.setImage(UIImage(named: "speedManual"), forState: .Selected)
         rightButton.setImage(UIImage(named: "speedManual"), forState: .Highlighted)
+
+        leftButton.frame = CGRectMake(0, 0, 44, 44)
+        
+        leftButton.setImage(UIImage(named: "speedManual"), forState: .Normal)
+        leftButton.setImage(UIImage(named: "speedAuto"),   forState: .Selected)
+        leftButton.setImage(UIImage(named: "speedAuto"),   forState: .Highlighted)
         
         scaleView.center = CGPointMake(headerView.frame.size.width / 2, headerView.frame.size.height / 2)
         scaleView.minValue = -3.0
@@ -319,6 +326,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
 
+        row = XLFormRowDescriptor(tag: "showLeftButton", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show left view")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.leftView = updatedValue == "YES" ? self.leftButton : nil
+            }
+        }
+        
+        section.addFormRow(row)
+        
         row = XLFormRowDescriptor(tag: "showRightButton", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Show right view")
         
         row.selectorOptions = ["YES", "NO"]
@@ -334,7 +356,6 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
 
-        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)

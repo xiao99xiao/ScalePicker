@@ -216,6 +216,22 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             layoutSubviews()
         }
     }
+
+    public var leftView: UIView? {
+        willSet(newLeftView) {
+            if let view = leftView {
+                view.removeFromSuperview()
+            }
+        }
+        
+        didSet {
+            if let view = leftView {
+                addSubview(view)
+            }
+            
+            layoutSubviews()
+        }
+    }
     
     private var picker: SlidePicker!
     private var shouldUpdatePicker = true
@@ -314,6 +330,10 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.layoutSubviews()
         
         titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
+
+        if let view = leftView {
+            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, frame.size.height / 2)
+        }
         
         if let view = rightView {
             view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, frame.size.height / 2)
