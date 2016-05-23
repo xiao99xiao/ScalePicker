@@ -323,7 +323,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public override func layoutSubviews() {
         super.layoutSubviews()
 
-        valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 0,
+        valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
                                       frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
                                   frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
@@ -332,11 +332,11 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
 
         if let view = leftView {
-            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, frame.size.height / 2)
+            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
         }
         
         if let view = rightView {
-            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, frame.size.height / 2)
+            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, picker.center.y + 5)
         }
     }
     
