@@ -27,6 +27,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
+    public var invertValues: Bool = false {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    @IBInspectable
     public var blockedUI: Bool = false {
         didSet {
             uiBlockView.removeFromSuperview()
@@ -321,9 +328,9 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         cell.showPlusForPositiveValues = showPlusForPositiveValues
 
         if indexPath.section == 0 {
-            cell.updateValue(CGFloat.min, type: .Empty)
+            cell.updateValue(invertValues ? CGFloat.max : CGFloat.min, type: .Empty)
         } else if indexPath.section == sectionsCount - 1 {
-            cell.updateValue(CGFloat.max, type: .Empty)
+            cell.updateValue(invertValues ? CGFloat.min : CGFloat.max, type: .Empty)
         } else {
             if let values = values {
                 cell.highlightTick = false
@@ -333,7 +340,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                 
                 cell.updateValue(currentValue, type: indexPath.row == 0 ? .BigStroke : .SmallStroke)
             } else {
-                let currentValue = minValue + CGFloat(indexPath.section - 1)
+                let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
 
                 if indexPath.row == 0 {
                     if highlightCenterTick {
@@ -344,7 +351,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     
                     cell.updateValue(currentValue, type: .BigStroke)
                 } else {
-                    cell.updateValue(currentValue + tickValue * CGFloat(indexPath.row), type: .SmallStroke)
+                    let value = invertValues ? currentValue - tickValue * CGFloat(indexPath.row) : currentValue + tickValue * CGFloat(indexPath.row)
+                    cell.updateValue(value, type: .SmallStroke)
                 }
             }
         }
@@ -435,7 +443,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         } else {
             let percent = collectionView.contentOffset.x / (collectionView.contentSize.width - bounds.width)
             let absoluteValue = percent * (maxValue - minValue)
-            let currentValue = max(min(absoluteValue + minValue, maxValue), minValue)
+            let currentValue = invertValues ? min(max(maxValue - absoluteValue, minValue), maxValue) : max(min(absoluteValue + minValue, maxValue), minValue)
             
             delegate?.didSelectValue(currentValue)
         }

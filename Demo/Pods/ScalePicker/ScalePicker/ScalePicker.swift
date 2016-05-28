@@ -40,6 +40,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var invertValues: Bool = false {
+        didSet {
+            picker.invertValues = invertValues
+        }
+    }
+    
+    @IBInspectable
     public var showCurrentValue: Bool = false {
         didSet {
             valueLabel.alpha = showCurrentValue ? 1.0 : 0.0

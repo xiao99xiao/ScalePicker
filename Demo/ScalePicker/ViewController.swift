@@ -355,6 +355,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         }
         
         section.addFormRow(row)
+        
+        row = XLFormRowDescriptor(tag: "invertButton", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Invert values")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.invertValues = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
 
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
