@@ -12,6 +12,11 @@ import UIKit
 public typealias ValueFormatter = (CGFloat) -> NSAttributedString
 public typealias ValueChangeHandler = (CGFloat) -> Void
 
+public enum ScalePickerValuePosition {
+    case Top
+    case Left
+}
+
 public protocol ScalePickerDelegate {
     func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
 }
@@ -23,6 +28,12 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public var valueChangeHandler: ValueChangeHandler = {(value: CGFloat) in
     
+    }
+    
+    public var valuePosition = ScalePickerValuePosition.Top {
+        didSet {
+            layoutSubviews()
+        }
     }
     
     @IBInspectable
@@ -330,20 +341,35 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public override func layoutSubviews() {
         super.layoutSubviews()
 
-        valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
-                                      frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
                                   frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
         picker.layoutSubviews()
         
-        titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
+        if let view = rightView {
+            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, picker.center.y + 5)
+        }
 
-        if let view = leftView {
+        if let view = leftView where valuePosition == .Top {
             view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
         }
         
-        if let view = rightView {
-            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, picker.center.y + 5)
+        var leftViewWidth: CGFloat = 60
+
+        if let view = leftView where valuePosition == .Left {
+            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, 5 + frame.size.height / 3)
+            
+            leftViewWidth = view.frame.size.width
+        }
+        
+        titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
+
+
+        if valuePosition == .Top {
+            valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
+                                          frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
+        } else {
+            valueLabel.frame = CGRectMake(0, 10 + frame.size.height / 2,
+                                          sidePadding * 2 + leftViewWidth, frame.size.height / 4.0)
         }
     }
     

@@ -371,6 +371,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
 
+        row = XLFormRowDescriptor(tag: "valuePosition", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Value position")
+        
+        row.selectorOptions = ["Top", "Left"]
+        row.value = "Top"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.valuePosition = updatedValue == "Top" ? .Top : .Left
+            }
+        }
+        
+        section.addFormRow(row)
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)
