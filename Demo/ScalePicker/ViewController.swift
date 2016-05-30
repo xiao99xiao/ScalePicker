@@ -386,6 +386,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
         
+        row = XLFormRowDescriptor(tag: "sameSizeTicks", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Ticks size")
+        
+        row.selectorOptions = ["Various", "Same"]
+        row.value = "Various"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.allTicksWithSameSize = updatedValue == "Same"
+            }
+        }
+        
+        section.addFormRow(row)
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)

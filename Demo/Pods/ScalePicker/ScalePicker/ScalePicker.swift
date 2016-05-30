@@ -58,6 +58,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var allTicksWithSameSize: Bool = false {
+        didSet {
+            picker.allTicksWithSameSize = allTicksWithSameSize
+        }
+    }
+    
+    @IBInspectable
     public var showCurrentValue: Bool = false {
         didSet {
             valueLabel.alpha = showCurrentValue ? 1.0 : 0.0

@@ -34,6 +34,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
+    public var allTicksWithSameSize: Bool = false {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    @IBInspectable
     public var blockedUI: Bool = false {
         didSet {
             uiBlockView.removeFromSuperview()
@@ -338,7 +345,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                 let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
                 let currentValue = values[index]
                 
-                cell.updateValue(currentValue, type: indexPath.row == 0 ? .BigStroke : .SmallStroke)
+                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .BigStroke : .SmallStroke)
             } else {
                 let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
 
@@ -352,7 +359,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     cell.updateValue(currentValue, type: .BigStroke)
                 } else {
                     let value = invertValues ? currentValue - tickValue * CGFloat(indexPath.row) : currentValue + tickValue * CGFloat(indexPath.row)
-                    cell.updateValue(value, type: .SmallStroke)
+                    cell.updateValue(value, type: allTicksWithSameSize ? .BigStroke : .SmallStroke)
                 }
             }
         }
