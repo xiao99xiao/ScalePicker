@@ -359,6 +359,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     cell.updateValue(currentValue, type: .BigStroke)
                 } else {
                     let value = invertValues ? currentValue - tickValue * CGFloat(indexPath.row) : currentValue + tickValue * CGFloat(indexPath.row)
+                    cell.showTickLabels = allTicksWithSameSize ? false : showTickLabels
                     cell.updateValue(value, type: allTicksWithSameSize ? .BigStroke : .SmallStroke)
                 }
             }
