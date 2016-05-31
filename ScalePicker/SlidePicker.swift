@@ -74,7 +74,11 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
-    public var highlightCenterTick: Bool = false
+    public var highlightCenterTick: Bool = true {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     @IBInspectable
     public var bounces: Bool = false {

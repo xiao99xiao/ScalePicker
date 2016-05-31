@@ -14,8 +14,8 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
     typealias FormButtonHandler = () -> Void
 
     private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 60))
-    private let rightButton = UIButton(type: .Custom)
-    private let leftButton = UIButton(type: .Custom)
+    private let rightButton = UIImageView(image: UIImage(named: "speedAuto"))
+    private let leftButton = UIImageView(image: UIImage(named: "speedManual"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,17 +25,8 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         headerView.userInteractionEnabled = true
         headerView.backgroundColor = Utils.BackgroundColor
         
-        rightButton.frame = CGRectMake(0, 0, 44, 44)
-        
-        rightButton.setImage(UIImage(named: "speedAuto"),   forState: .Normal)
-        rightButton.setImage(UIImage(named: "speedManual"), forState: .Selected)
-        rightButton.setImage(UIImage(named: "speedManual"), forState: .Highlighted)
-
-        leftButton.frame = CGRectMake(0, 0, 44, 44)
-        
-        leftButton.setImage(UIImage(named: "speedManual"), forState: .Normal)
-        leftButton.setImage(UIImage(named: "speedAuto"),   forState: .Selected)
-        leftButton.setImage(UIImage(named: "speedAuto"),   forState: .Highlighted)
+        rightButton.contentMode = .Center
+        leftButton.contentMode = .Center
         
         scaleView.center = CGPointMake(headerView.frame.size.width / 2, headerView.frame.size.height / 2)
         scaleView.minValue = -3.0

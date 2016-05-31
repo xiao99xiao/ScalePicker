@@ -56,7 +56,14 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             picker.invertValues = invertValues
         }
     }
-    
+
+    @IBInspectable
+    public var highlightCenterTick: Bool = true {
+        didSet {
+            picker.highlightCenterTick = highlightCenterTick
+        }
+    }
+
     @IBInspectable
     public var allTicksWithSameSize: Bool = false {
         didSet {
@@ -321,7 +328,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.delegate = self
         picker.snapEnabled = snapEnabled
         picker.showTickLabels = showTickLabels
-        picker.highlightCenterTick = true
+        picker.highlightCenterTick = highlightCenterTick
         picker.bounces = bounces
         picker.tickColor = tickColor
         picker.centerView = centerView
@@ -363,19 +370,18 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         var leftViewWidth: CGFloat = 60
 
         if let view = leftView where valuePosition == .Left {
-            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, 5 + frame.size.height / 3)
+            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
             
             leftViewWidth = view.frame.size.width
         }
         
         titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
 
-
         if valuePosition == .Top {
             valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
                                           frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         } else {
-            valueLabel.frame = CGRectMake(0, 10 + frame.size.height / 2,
+            valueLabel.frame = CGRectMake(0, 7 + frame.size.height / 2,
                                           sidePadding * 2 + leftViewWidth, frame.size.height / 4.0)
         }
     }
