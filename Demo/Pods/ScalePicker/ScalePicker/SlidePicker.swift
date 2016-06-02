@@ -34,6 +34,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
+    public var fillSides: Bool = false {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    @IBInspectable
     public var allTicksWithSameSize: Bool = false {
         didSet {
             collectionView.reloadData()
@@ -293,11 +300,25 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             return CGSizeZero
         }
         
+        let regularCellSize = CGSizeMake(spaceBetweenTicks, bounds.height)
+        
         if (indexPath.section == 0) || (indexPath.section == (sectionsCount - 1)) {
-            return CGSizeMake((bounds.width / 2) - (spaceBetweenTicks / 2), bounds.height)
+            if fillSides {
+                let sideItems = (Int(frame.size.width / spaceBetweenTicks) + 2) / 2
+
+                if (indexPath.section == 0 && indexPath.row == 0) ||
+                    (indexPath.section == sectionsCount - 1 && indexPath.row == sideItems - 1)  {
+                    
+                    return CGSizeMake((spaceBetweenTicks / 2) - SlidePickerCell.strokeWidth, bounds.height)
+                } else {
+                    return regularCellSize
+                }
+            } else {
+                return CGSizeMake((bounds.width / 2) - (spaceBetweenTicks / 2), bounds.height)
+            }
         }
         
-        return CGSizeMake(spaceBetweenTicks, bounds.height)
+        return regularCellSize
     }
     
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -306,7 +327,9 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
         
         if (section == 0) || (section >= (sectionsCount - 1)) {
-            return 1
+            let sideItems = Int(frame.size.width / spaceBetweenTicks) + 2
+            
+            return fillSides ? sideItems / 2 : 1
         } else {
             if let values = values {
                 let elements = (section - 1) * Int(numberOfTicksBetweenValues + 1)
@@ -339,9 +362,9 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         cell.showPlusForPositiveValues = showPlusForPositiveValues
 
         if indexPath.section == 0 {
-            cell.updateValue(invertValues ? CGFloat.max : CGFloat.min, type: .Empty)
+            cell.updateValue(invertValues ? CGFloat.max : CGFloat.min, type: fillSides ? .BigStroke : .Empty)
         } else if indexPath.section == sectionsCount - 1 {
-            cell.updateValue(invertValues ? CGFloat.min : CGFloat.max, type: .Empty)
+            cell.updateValue(invertValues ? CGFloat.min : CGFloat.max, type: fillSides ? .BigStroke : .Empty)
         } else {
             if let values = values {
                 cell.highlightTick = false
@@ -505,6 +528,8 @@ public class SlidePickerCell: UICollectionViewCell {
         return (rect.width / 2) + 1
     }()
     
+    private static let strokeWidth: CGFloat = 1.5
+    
     public var showTickLabels = true
     public var showPlusForPositiveValues = true
     public var highlightTick = false
@@ -527,7 +552,7 @@ public class SlidePickerCell: UICollectionViewCell {
     
     private let strokeView = UIView()
     private let valueLabel = UILabel()
-    private let strokeWidth: CGFloat = 1.5
+    private let strokeWidth: CGFloat = SlidePickerCell.strokeWidth
     private var bigStrokePaddind: CGFloat = 4.0
     private var smallStrokePaddind: CGFloat = 8.0
     

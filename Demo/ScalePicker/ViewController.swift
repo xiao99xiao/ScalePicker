@@ -36,7 +36,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.showTickLabels = false
         scaleView.delegate = self
         scaleView.snapEnabled = true
-        scaleView.bounces = false
+        scaleView.bounces = true
         scaleView.tickColor = UIColor.whiteColor()
         scaleView.centerArrowImage = UIImage(named: "arrowPointer")
         scaleView.gradientMaskEnabled = true
@@ -88,7 +88,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         var row = XLFormRowDescriptor(tag: "minValue", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Min value")
         
-        row.selectorOptions = ["-10.0", "-3.0", "0.0"]
+        row.selectorOptions = ["-10.0", "-3.0", "-1.0", "0.0"]
         row.value = "-3.0"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
@@ -179,7 +179,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         row = XLFormRowDescriptor(tag: "bounces", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Bounces")
         
         row.selectorOptions = ["YES", "NO"]
-        row.value = "NO"
+        row.value = "YES"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? String
@@ -392,6 +392,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
         
+        row = XLFormRowDescriptor(tag: "fillSides", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Fill sides")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.fillSides = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)
