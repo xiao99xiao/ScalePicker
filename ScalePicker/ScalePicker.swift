@@ -464,12 +464,22 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         value += scaleShift
         
+        print("Raw offset: \(value)")
+
         if offset < 0 {
             if value < 0 {
-                value += 1
+                if invertValues {
+                    value = fabs(value) + 1
+                } else {
+                    value += 1
+                }
+            }
+        } else {
+            if invertValues {
+                value = 1 - (value - scaleShift)
             }
         }
-        
+                
         valueLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, value, value)
     }
     
