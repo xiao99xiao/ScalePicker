@@ -63,6 +63,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             picker.fillSides = fillSides
         }
     }
+    
+    @IBInspectable
+    public var elasticCurrentValue: Bool = false
 
     @IBInspectable
     public var highlightCenterTick: Bool = true {
@@ -432,6 +435,36 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
         
         shouldUpdatePicker = true
+    }
+    
+    public func didChangeContentOffset(offset: CGFloat) {
+        guard elasticCurrentValue else { return }
+        
+        var minScale: CGFloat   = 0.0
+        var maxScale: CGFloat   = 0.2
+        var scaleShift: CGFloat = 1.0
+        var offsetValue         = offset
+        var maxOffset: CGFloat  = 50.0
+        var minOffset: CGFloat  = 0.0
+        var offsetShift: CGFloat = 0.0
+
+        if offset < 0 {
+            scaleShift = -0.2
+            offsetShift = 50.0
+            offsetValue = offset + offsetShift
+        }
+
+        var value = min(maxScale, max(minScale, offsetValue * (maxScale / maxOffset)))
+        
+        value += scaleShift
+        
+        if offset < 0 {
+            if value < 0 {
+                value += 1
+            }
+        }
+        
+        valueLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, value, value)
     }
     
     private func updateCenterViewOffset() {

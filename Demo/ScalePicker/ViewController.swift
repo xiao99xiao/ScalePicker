@@ -407,6 +407,21 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
 
+        row = XLFormRowDescriptor(tag: "elasticValue", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Elastic value")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.elasticCurrentValue = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+        
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         
         form.addFormSection(section)

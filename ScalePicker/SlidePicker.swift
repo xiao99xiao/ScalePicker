@@ -11,6 +11,7 @@ import UIKit
 
 public protocol SlidePickerDelegate {
     func didSelectValue(value: CGFloat)
+    func didChangeContentOffset(offset: CGFloat)
 }
 
 @IBDesignable
@@ -409,6 +410,15 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     
     public func scrollViewDidScroll(scrollView: UIScrollView) {
         updateSelectedValue(false)
+        
+        var offset = scrollView.contentOffset.x
+        let contentSize = scrollView.contentSize.width
+        
+        if offset <= 0 {
+            delegate?.didChangeContentOffset(offset)
+        } else if offset >=  contentSize - frame.size.width {
+            delegate?.didChangeContentOffset(offset - contentSize + frame.size.width)
+        }
     }
     
     public func scrollToValue(value: CGFloat, animated: Bool) {
