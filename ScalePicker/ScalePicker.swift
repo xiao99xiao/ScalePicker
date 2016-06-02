@@ -437,7 +437,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         shouldUpdatePicker = true
     }
     
-    public func didChangeContentOffset(let offset: CGFloat) {
+    public func didChangeContentOffset(offset: CGFloat) {
         guard elasticCurrentValue else { return }
         
         let minScale: CGFloat    = 0.0

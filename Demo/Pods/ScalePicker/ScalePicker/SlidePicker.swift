@@ -411,7 +411,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     public func scrollViewDidScroll(scrollView: UIScrollView) {
         updateSelectedValue(false)
         
-        var offset = scrollView.contentOffset.x
+        let offset = scrollView.contentOffset.x
         let contentSize = scrollView.contentSize.width
         
         if offset <= 0 {
