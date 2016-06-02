@@ -398,8 +398,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
                                           frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         } else {
-            valueLabel.frame = CGRectMake(-3, 7 + frame.size.height / 2,
-                                          sidePadding * 2 + leftViewWidth, frame.size.height / 3.0)
+            valueLabel.frame = CGRectMake(-3, 7 + frame.size.height / 2, sidePadding * 2 + leftViewWidth, 16)
         }
     }
     
