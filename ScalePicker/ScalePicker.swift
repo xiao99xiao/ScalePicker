@@ -145,6 +145,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var pickerOffset: CGFloat = 0.0 {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    @IBInspectable
     public var tickColor: UIColor = UIColor.whiteColor() {
         didSet {
             picker.tickColor = tickColor
@@ -365,8 +372,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public override func layoutSubviews() {
         super.layoutSubviews()
 
-        picker.frame = CGRectMake(pickerPadding + sidePadding, 0,
-                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
+        picker.frame = CGRectMake(pickerPadding + sidePadding, pickerOffset,
+                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height + pickerOffset)
         picker.layoutSubviews()
         
         if let view = rightView {
@@ -441,14 +448,14 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         guard elasticCurrentValue else { return }
         
         let minScale: CGFloat    = 0.0
-        let maxScale: CGFloat    = 0.2
+        let maxScale: CGFloat    = 0.3
         let maxOffset: CGFloat   = 50.0
         var offsetShift: CGFloat = 0.0
         var scaleShift: CGFloat  = 1.0
         var offsetValue          = offset
 
         if offset < 0 {
-            scaleShift = -0.2
+            scaleShift = -0.3
             offsetShift = 50.0
             offsetValue = offset + offsetShift
         }
