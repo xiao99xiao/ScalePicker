@@ -42,7 +42,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.gradientMaskEnabled = true
         scaleView.blockedUI = false
         scaleView.sidePadding = 20.0
-        scaleView.pickerPadding = 10.0
+        scaleView.pickerPadding = 50.0
         scaleView.title = "Speed"
         scaleView.showCurrentValue = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in

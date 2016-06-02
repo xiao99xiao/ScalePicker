@@ -373,7 +373,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         super.layoutSubviews()
 
         picker.frame = CGRectMake(pickerPadding + sidePadding, pickerOffset,
-                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height + pickerOffset)
+                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
         picker.layoutSubviews()
         
         if let view = rightView {
