@@ -443,7 +443,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         let minScale: CGFloat    = 0.0
         let maxScale: CGFloat    = 0.2
         let maxOffset: CGFloat   = 50.0
-        let minOffset: CGFloat   = 0.0
         var offsetShift: CGFloat = 0.0
         var scaleShift: CGFloat  = 1.0
         var offsetValue          = offset
