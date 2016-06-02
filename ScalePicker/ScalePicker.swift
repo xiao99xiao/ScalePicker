@@ -398,7 +398,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
                                           frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         } else {
-            valueLabel.frame = CGRectMake(0, 7 + frame.size.height / 2,
+            valueLabel.frame = CGRectMake(-3, 7 + frame.size.height / 2,
                                           sidePadding * 2 + leftViewWidth, frame.size.height / 3.0)
         }
     }
@@ -448,14 +448,14 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         guard elasticCurrentValue else { return }
         
         let minScale: CGFloat    = 0.0
-        let maxScale: CGFloat    = 0.3
+        let maxScale: CGFloat    = 0.25
         let maxOffset: CGFloat   = 50.0
         var offsetShift: CGFloat = 0.0
         var scaleShift: CGFloat  = 1.0
         var offsetValue          = offset
 
         if offset < 0 {
-            scaleShift = -0.3
+            scaleShift = -maxScale
             offsetShift = 50.0
             offsetValue = offset + offsetShift
         }
