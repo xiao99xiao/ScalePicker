@@ -56,6 +56,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             picker.invertValues = invertValues
         }
     }
+    
+    @IBInspectable
+    public var fillSides: Bool = false {
+        didSet {
+            picker.fillSides = fillSides
+        }
+    }
 
     @IBInspectable
     public var highlightCenterTick: Bool = true {
