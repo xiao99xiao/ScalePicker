@@ -399,7 +399,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
                                           frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         } else {
             valueLabel.frame = CGRectMake(0, 7 + frame.size.height / 2,
-                                          sidePadding * 2 + leftViewWidth, frame.size.height / 4.0)
+                                          sidePadding * 2 + leftViewWidth, frame.size.height / 3.0)
         }
     }
     
@@ -464,8 +464,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         value += scaleShift
         
-        print("Raw offset: \(value)")
-
         if offset < 0 {
             if value < 0 {
                 if invertValues {
