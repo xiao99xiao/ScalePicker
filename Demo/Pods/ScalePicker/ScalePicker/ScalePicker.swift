@@ -505,7 +505,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private func valueWidth(text: NSAttributedString) -> CGFloat {
         let rect = text.boundingRectWithSize(CGSizeMake(1024, frame.size.width), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
         
-        return rect.width
+        return rect.width + 4
     }
 }
 
