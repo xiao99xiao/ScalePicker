@@ -385,12 +385,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
         }
         
-        var leftViewWidth: CGFloat = 60
-
         if let view = leftView where valuePosition == .Left {
-            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
-            
-            leftViewWidth = view.frame.size.width
+            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)            
         }
         
         titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
