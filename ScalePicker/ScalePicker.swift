@@ -302,6 +302,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             }
             
             valueLabel.attributedText = valueFormatter(currentValue)
+            layoutValueLabel()
         }
     }
     
@@ -398,7 +399,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
                                           frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
         } else {
-            valueLabel.frame = CGRectMake(-3, 5 + frame.size.height / 2, sidePadding * 2 + leftViewWidth, 16)
+            layoutValueLabel()
         }
     }
     
@@ -482,6 +483,33 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     private func updateCenterViewOffset() {
         picker.centerViewOffsetY = showTickLabels ? centerViewWithLabelsYOffset : centerViewWithoutLabelsYOffset
+    }
+    
+    private func layoutValueLabel() {
+        let text = valueLabel.attributedText
+        
+        guard let textValue = text else { return }
+
+        let textWidth = valueWidth(textValue)
+        var signOffset: CGFloat = 0
+        
+        if textValue.string.containsString("+") || textValue.string.containsString("-") {
+            signOffset = 2
+        }
+        
+        if valuePosition == .Left {
+            if let view = leftView {
+                valueLabel.frame = CGRectMake(view.center.x - signOffset - textWidth / 2, 5 + frame.size.height / 2, textWidth, 16)
+            } else {
+                valueLabel.frame = CGRectMake(sidePadding, 5 + frame.size.height / 2, textWidth, 16)
+            }
+        }
+    }
+    
+    private func valueWidth(text: NSAttributedString) -> CGFloat {
+        let rect = text.boundingRectWithSize(CGSizeMake(1024, frame.size.width), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
+        
+        return rect.width
     }
 }
 

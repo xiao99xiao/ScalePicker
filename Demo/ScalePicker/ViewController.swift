@@ -24,10 +24,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         headerView.userInteractionEnabled = true
         headerView.backgroundColor = Utils.BackgroundColor
-        
-        rightButton.contentMode = .Center
-        leftButton.contentMode = .Center
-        
+                
         scaleView.center = CGPointMake(headerView.frame.size.width / 2, headerView.frame.size.height / 2)
         scaleView.minValue = -3.0
         scaleView.maxValue = 3.0
