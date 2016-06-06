@@ -418,6 +418,22 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         }
         
         section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "trackProgress", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Track progress")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.trackProgress = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
         
         section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
         

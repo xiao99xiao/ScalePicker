@@ -58,6 +58,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var trackProgress: Bool = false {
+        didSet {
+            progressView.alpha = trackProgress ? 1.0 : 0.0
+        }
+    }
+    
+    @IBInspectable
     public var fillSides: Bool = false {
         didSet {
             picker.fillSides = fillSides
@@ -288,7 +295,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
+    private var progressView = UIView()
     private var initialValue: CGFloat = 0.0
+    private let progressViewWidth: CGFloat = 1.0
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -355,6 +364,14 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         updateCenterViewOffset()
         
         addSubview(picker)
+        
+        progressView.frame = CGRectMake(0, 0, progressViewWidth, frame.size.height / 7)
+        progressView.backgroundColor = UIColor.whiteColor()
+        progressView.alpha = 0.0
+        progressView.layer.masksToBounds = true
+        progressView.layer.cornerRadius = progressViewWidth / 2
+
+        addSubview(progressView)
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(_:)))
         
@@ -380,16 +397,16 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         if let view = rightView {
             view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, picker.center.y + 5)
         }
-
-        if let view = leftView where valuePosition == .Top {
-            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
+        
+        if let view = leftView {
+            if valuePosition == .Left {
+                view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
+            } else {
+                view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
+            }
         }
         
-        if let view = leftView where valuePosition == .Left {
-            view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)            
-        }
-        
-        titleLabel.frame = CGRectMake(sidePadding, 0, frame.width - sidePadding * 2, frame.size.height)
+        titleLabel.frame = CGRectMake(sidePadding, 5, frame.width - sidePadding * 2, frame.size.height)
 
         if valuePosition == .Top {
             valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
@@ -440,7 +457,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         shouldUpdatePicker = true
     }
     
-    public func didChangeContentOffset(offset: CGFloat) {
+    public func didChangeContentOffset(offset: CGFloat, progress: CGFloat) {
+        layoutProgressView(progress)
+
         guard elasticCurrentValue else { return }
         
         let minScale: CGFloat    = 0.0
@@ -481,6 +500,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.centerViewOffsetY = showTickLabels ? centerViewWithLabelsYOffset : centerViewWithoutLabelsYOffset
     }
     
+    private func layoutProgressView(progress: CGFloat) {
+        let scaledValue = picker.frame.size.width * progress - progressViewWidth / 2
+        
+        progressView.center = CGPointMake(picker.frame.origin.x + scaledValue,
+                                          pickerOffset + 4 + frame.size.height / 3 + progressView.frame.size.height / 2)
+    }
+    
     private func layoutValueLabel() {
         let text = valueLabel.attributedText
         
@@ -497,15 +523,17 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             if let view = leftView {
                 valueLabel.frame = CGRectMake(view.center.x - signOffset - textWidth / 2, 5 + frame.size.height / 2, textWidth, 16)
             } else {
-                valueLabel.frame = CGRectMake(sidePadding, 5 + frame.size.height / 2, textWidth, 16)
+                valueLabel.frame = CGRectMake(sidePadding, 5, textWidth, frame.size.height)
             }
+        } else {
+            valueLabel.frame = CGRectMake(sidePadding, 5, textWidth, frame.size.height - 10)
         }
     }
     
     private func valueWidth(text: NSAttributedString) -> CGFloat {
         let rect = text.boundingRectWithSize(CGSizeMake(1024, frame.size.width), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
         
-        return rect.width + 4
+        return rect.width + 10
     }
 }
 
