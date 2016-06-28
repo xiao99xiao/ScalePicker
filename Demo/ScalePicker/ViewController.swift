@@ -38,8 +38,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.centerArrowImage = UIImage(named: "arrowPointer")
         scaleView.gradientMaskEnabled = true
         scaleView.blockedUI = false
-        scaleView.sidePadding = 20.0
-        scaleView.pickerPadding = 50.0
+        scaleView.sidePadding = 80.0
         scaleView.title = "Speed"
         scaleView.showCurrentValue = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
@@ -256,29 +255,14 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         row = XLFormRowDescriptor(tag: "sidePadding", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Side padding")
         
-        row.selectorOptions = ["0", "20", "50"]
-        row.value = "20"
+        row.selectorOptions = ["0", "80", "150"]
+        row.value = "80"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? NSString
             
             if let updatedValue = updatedValue {
                 self.scaleView.sidePadding = CGFloat(updatedValue.floatValue)
-            }
-        }
-        
-        section.addFormRow(row)
-
-        row = XLFormRowDescriptor(tag: "pickerPadding", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Picker padding")
-        
-        row.selectorOptions = ["0", "10", "50"]
-        row.value = "10"
-        
-        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
-            let updatedValue = newValue as? NSString
-            
-            if let updatedValue = updatedValue {
-                self.scaleView.pickerPadding = CGFloat(updatedValue.floatValue)
             }
         }
         
@@ -429,6 +413,42 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
             
             if let updatedValue = updatedValue {
                 self.scaleView.trackProgress = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "invertProgress", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Invert progress")
+        
+        row.selectorOptions = ["YES", "NO"]
+        row.value = "NO"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                self.scaleView.invertProgress = updatedValue == "YES"
+            }
+        }
+        
+        section.addFormRow(row)
+
+        row = XLFormRowDescriptor(tag: "progressColor", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Progress color")
+        
+        row.selectorOptions = ["White", "Red", "Yellow"]
+        row.value = "White"
+        
+        row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
+            let updatedValue = newValue as? String
+            
+            if let updatedValue = updatedValue {
+                if updatedValue == "White" {
+                    self.scaleView.progressColor = UIColor.whiteColor()
+                } else if updatedValue == "Red" {
+                    self.scaleView.progressColor = UIColor.redColor()
+                } else if updatedValue == "Yellow" {
+                    self.scaleView.progressColor = UIColor.yellowColor()
+                }
             }
         }
         

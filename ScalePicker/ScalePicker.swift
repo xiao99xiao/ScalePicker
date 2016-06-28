@@ -65,6 +65,13 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var invertProgress: Bool = false {
+        didSet {
+            layoutProgressView(currentProgress)
+        }
+    }
+    
+    @IBInspectable
     public var fillSides: Bool = false {
         didSet {
             picker.fillSides = fillSides
@@ -166,6 +173,23 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             titleLabel.textColor = tickColor
         }
     }
+
+    @IBInspectable
+    public var progressColor: UIColor = UIColor.whiteColor() {
+        didSet {
+            progressView.backgroundColor = progressColor
+        }
+    }
+    
+    @IBInspectable
+    public var progressViewSize: CGFloat = 3.0 {
+        didSet {
+            progressView.frame = CGRectMake(0, 0, progressViewSize, progressViewSize)
+            progressView.layer.cornerRadius = progressViewSize / 2
+            
+            layoutProgressView(currentProgress)
+        }
+    }
     
     @IBInspectable
     public var centerArrowImage: UIImage? {
@@ -216,13 +240,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     @IBInspectable
     public var sidePadding: CGFloat = 0.0 {
-        didSet {
-            layoutSubviews()
-        }
-    }
-    
-    @IBInspectable
-    public var pickerPadding: CGFloat = 0.0 {
         didSet {
             layoutSubviews()
         }
@@ -289,15 +306,15 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
-    private var picker: SlidePicker!
-    private var shouldUpdatePicker = true
     private let centerImageView = UIImageView(frame: CGRectMake(0, 0, 10, 10))
     private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
+    private var currentProgress: CGFloat = 0.0
     private var progressView = UIView()
     private var initialValue: CGFloat = 0.0
-    private let progressViewWidth: CGFloat = 1.0
+    private var picker: SlidePicker!
+    private var shouldUpdatePicker = true
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -331,7 +348,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         userInteractionEnabled = true
         
         titleLabel.textColor = tickColor
-        titleLabel.textAlignment = .Left
+        titleLabel.textAlignment = .Center
         titleLabel.font = UIFont.systemFontOfSize(13.0)
         
         addSubview(titleLabel)
@@ -347,7 +364,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         centerView.addSubview(centerImageView)
         
-        picker = SlidePicker(frame: CGRectMake(pickerPadding, 0, frame.size.width - pickerPadding * 2, frame.size.height))
+        picker = SlidePicker(frame: CGRectMake(sidePadding, 0, frame.size.width - sidePadding * 2, frame.size.height))
         
         picker.numberOfTicksBetweenValues = numberOfTicksBetweenValues
         picker.minValue = minValue
@@ -365,11 +382,11 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         addSubview(picker)
         
-        progressView.frame = CGRectMake(0, 0, progressViewWidth, frame.size.height / 7)
+        progressView.frame = CGRectMake(0, 0, progressViewSize, progressViewSize)
         progressView.backgroundColor = UIColor.whiteColor()
         progressView.alpha = 0.0
         progressView.layer.masksToBounds = true
-        progressView.layer.cornerRadius = progressViewWidth / 2
+        progressView.layer.cornerRadius = progressViewSize / 2
 
         addSubview(progressView)
 
@@ -390,27 +407,29 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public override func layoutSubviews() {
         super.layoutSubviews()
 
-        picker.frame = CGRectMake(pickerPadding + sidePadding, pickerOffset,
-                                  frame.size.width - pickerPadding * 2 - sidePadding * 2, frame.size.height)
+        picker.frame = CGRectMake(sidePadding, pickerOffset,
+                                  frame.size.width - sidePadding * 2, frame.size.height)
         picker.layoutSubviews()
         
+        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.1 : 0.0
+
         if let view = rightView {
-            view.center = CGPointMake(frame.size.width - sidePadding - view.frame.size.width / 2, picker.center.y + 5)
+            view.center = CGPointMake(frame.size.width - xOffset - sidePadding / 2, picker.center.y + 5)
         }
         
         if let view = leftView {
             if valuePosition == .Left {
-                view.center = CGPointMake(sidePadding + view.frame.size.width / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
+                view.center = CGPointMake(xOffset + sidePadding / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
             } else {
-                view.center = CGPointMake(sidePadding + view.frame.size.width / 2, picker.center.y + 5)
+                view.center = CGPointMake(xOffset + sidePadding / 2, picker.center.y + 5)
             }
         }
-        
-        titleLabel.frame = CGRectMake(sidePadding, 5, frame.width - sidePadding * 2, frame.size.height)
+
+        titleLabel.frame = CGRectMake(xOffset, 5, sidePadding, frame.size.height)
 
         if valuePosition == .Top {
-            valueLabel.frame = CGRectMake(sidePadding + pickerPadding, 5,
-                                          frame.width - sidePadding * 2 - pickerPadding * 2, frame.size.height / 4.0)
+            valueLabel.frame = CGRectMake(sidePadding, 5,
+                                          frame.width - sidePadding * 2, frame.size.height / 4.0)
         } else {
             layoutValueLabel()
         }
@@ -501,10 +520,19 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     private func layoutProgressView(progress: CGFloat) {
-        let scaledValue = picker.frame.size.width * progress - progressViewWidth / 2
+        currentProgress = progress
         
-        progressView.center = CGPointMake(picker.frame.origin.x + scaledValue,
-                                          pickerOffset + 4 + frame.size.height / 3 + progressView.frame.size.height / 2)
+        let updatedProgress = invertProgress ? 1.0 - progress : progress
+        let xOffset = gradientMaskEnabled ? picker.frame.origin.x + (picker.frame.size.width * 0.15) : picker.frame.origin.x
+        let progressWidth = gradientMaskEnabled ? picker.frame.size.width * 0.7 : picker.frame.size.width
+        let scaledValue = progressWidth * updatedProgress
+        var yOffset = pickerOffset + 4 + frame.size.height / 3
+
+        if title.isEmpty && valuePosition == .Left  {
+            yOffset -= 6
+        }
+        
+        progressView.center = CGPointMake(xOffset + scaledValue, yOffset)
     }
     
     private func layoutValueLabel() {
@@ -519,14 +547,18 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             signOffset = 2
         }
         
+        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.1 : 0.0
+        
         if valuePosition == .Left {
             if let view = leftView {
                 valueLabel.frame = CGRectMake(view.center.x - signOffset - textWidth / 2, 5 + frame.size.height / 2, textWidth, 16)
             } else {
                 valueLabel.frame = CGRectMake(sidePadding, 5, textWidth, frame.size.height)
+                valueLabel.center = CGPointMake(xOffset + sidePadding / 2, frame.size.height / 2 + 5)
             }
         } else {
-            valueLabel.frame = CGRectMake(sidePadding, 5, textWidth, frame.size.height - 10)
+            valueLabel.frame = CGRectMake(0, 5, textWidth, frame.size.height - 10)
+            valueLabel.center = CGPointMake(xOffset + sidePadding / 2, frame.size.height / 2 - 5)
         }
     }
     
