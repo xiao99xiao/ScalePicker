@@ -248,15 +248,15 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
 
         maskLeftLayer.frame = maskLayer.bounds
         maskLeftLayer.colors = [UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor, UIColor.blackColor().CGColor]
-        maskLeftLayer.startPoint = CGPointMake(0.25, 0.0)
-        maskLeftLayer.endPoint = CGPointMake(0.75, 0.0)
+        maskLeftLayer.startPoint = CGPointMake(0.1, 0.0)
+        maskLeftLayer.endPoint = CGPointMake(0.9, 0.0)
 
         maskRightLayer = CAGradientLayer()
         
         maskRightLayer.frame = maskLayer.bounds
         maskRightLayer.colors = [UIColor.blackColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor]
-        maskRightLayer.startPoint = CGPointMake(0.25, 0.0)
-        maskRightLayer.endPoint = CGPointMake(0.75, 0.0)
+        maskRightLayer.startPoint = CGPointMake(0.1, 0.0)
+        maskRightLayer.endPoint = CGPointMake(0.9, 0.0)
 
         maskLayer.addSublayer(maskLeftLayer)
         maskLayer.addSublayer(maskRightLayer)

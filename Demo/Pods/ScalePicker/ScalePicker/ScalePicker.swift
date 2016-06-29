@@ -411,7 +411,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
                                   frame.size.width - sidePadding * 2, frame.size.height)
         picker.layoutSubviews()
         
-        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.1 : 0.0
+        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.05 : 0.0
 
         if let view = rightView {
             view.center = CGPointMake(frame.size.width - xOffset - sidePadding / 2, picker.center.y + 5)
@@ -523,8 +523,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         currentProgress = progress
         
         let updatedProgress = invertProgress ? 1.0 - progress : progress
-        let xOffset = gradientMaskEnabled ? picker.frame.origin.x + (picker.frame.size.width * 0.15) : picker.frame.origin.x
-        let progressWidth = gradientMaskEnabled ? picker.frame.size.width * 0.7 : picker.frame.size.width
+        let xOffset = gradientMaskEnabled ? picker.frame.origin.x + (picker.frame.size.width * 0.1) : picker.frame.origin.x
+        let progressWidth = gradientMaskEnabled ? picker.frame.size.width * 0.8 : picker.frame.size.width
         let scaledValue = progressWidth * updatedProgress
         var yOffset = pickerOffset + 4 + frame.size.height / 3
 
@@ -547,7 +547,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             signOffset = 2
         }
         
-        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.1 : 0.0
+        let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.05 : 0.0
         
         if valuePosition == .Left {
             if let view = leftView {
