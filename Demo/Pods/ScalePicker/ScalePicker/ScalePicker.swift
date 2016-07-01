@@ -269,7 +269,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
         let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
-                     NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
+                     NSFontAttributeName: UIFont.systemFontOfSize(15.0)]
         
         return NSMutableAttributedString(string: value.format(".2"), attributes: attrs)
     }
@@ -329,6 +329,22 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             
             valueLabel.attributedText = valueFormatter(currentValue)
             layoutValueLabel()
+            updateProgressAsync()
+        }
+    }
+    
+    private func updateProgressAsync() {
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * CGFloat(NSEC_PER_SEC)))
+        
+        dispatch_after(popTime, dispatch_get_main_queue()) {
+            self.picker.updateCurrentProgress()
+            
+            if self.trackProgress {
+                UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations: { () -> Void in
+                    
+                    self.progressView.alpha = 1.0
+                    }, completion: nil)
+            }
         }
     }
     
@@ -443,6 +459,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         currentValue = initialValue
         delegate?.didChangeScaleValue(self, value: currentValue)
         valueChangeHandler(currentValue)
+
+        progressView.alpha = 0.0
+        updateProgressAsync()
     }
     
     public func increaseValue() {
@@ -460,8 +479,10 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         initialValue = value
         
         picker.scrollToValue(value, animated: false)
-        
+
         shouldUpdatePicker = true
+        
+        progressView.alpha = 0.0
     }
     
     public func didSelectValue(value: CGFloat) {
