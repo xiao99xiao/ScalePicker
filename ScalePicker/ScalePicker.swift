@@ -253,6 +253,10 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public func applyCurrentTransform() {
         picker.currentTransform = currentTransform
+        
+        if valuePosition == .Left {
+            valueLabel.transform = currentTransform
+        }
     }
     
     public var values: [CGFloat]? {
@@ -533,7 +537,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
             }
         }
                 
-        valueLabel.transform = CGAffineTransformScale(CGAffineTransformIdentity, value, value)
+        valueLabel.transform = CGAffineTransformScale(currentTransform, value, value)
     }
     
     private func updateCenterViewOffset() {
