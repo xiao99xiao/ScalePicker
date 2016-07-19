@@ -314,7 +314,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private let centerView = UIView(frame: CGRectMake(0, 0, 10, 10))
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
-    private var currentProgress: CGFloat = 0.0
+    private var currentProgress: CGFloat = 0.5
     private var progressView = UIView()
     private var initialValue: CGFloat = 0.0
     private var picker: SlidePicker!

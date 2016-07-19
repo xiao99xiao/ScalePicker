@@ -41,6 +41,8 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.sidePadding = 80.0
         scaleView.title = "Speed"
         scaleView.showCurrentValue = true
+        scaleView.trackProgress = true
+        scaleView.invertProgress = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
             let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
                          NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
@@ -406,7 +408,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         row = XLFormRowDescriptor(tag: "trackProgress", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Track progress")
         
         row.selectorOptions = ["YES", "NO"]
-        row.value = "NO"
+        row.value = "YES"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? String
@@ -421,7 +423,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         row = XLFormRowDescriptor(tag: "invertProgress", rowType: XLFormRowDescriptorTypeSelectorSegmentedControl, title: "Invert progress")
         
         row.selectorOptions = ["YES", "NO"]
-        row.value = "NO"
+        row.value = "YES"
         
         row.onChangeBlock = { [unowned self] (oldValue, newValue, rowDescriptor) -> Void in
             let updatedValue = newValue as? String
