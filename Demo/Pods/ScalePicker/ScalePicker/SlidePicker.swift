@@ -472,12 +472,16 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     }
                 }
             } else {
-                let absoluteValue = value - minValue
-                let percent = absoluteValue / (maxValue - minValue)
-                let absolutePercent = invertValues ? (1.0 - percent) : percent
-                let offsetX = absolutePercent * (collectionView.contentSize.width - bounds.width)
-                
-                collectionView.contentOffset = CGPointMake(offsetX, collectionView.contentOffset.y)
+                collectionView.performBatchUpdates({
+                    
+                    }, completion: { (finished) in
+                        let absoluteValue = value - self.minValue
+                        let percent = absoluteValue / (self.maxValue - self.minValue)
+                        let absolutePercent = self.invertValues ? (1.0 - percent) : percent
+                        let offsetX = absolutePercent * (self.collectionView.contentSize.width - self.bounds.width)
+                        
+                        self.collectionView.contentOffset = CGPointMake(offsetX, self.collectionView.contentOffset.y)
+                })
             }
         }
     }
