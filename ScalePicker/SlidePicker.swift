@@ -454,21 +454,30 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                 collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
             }
         } else {
-            for i in 1..<sectionsCount {
-                let itemsCount = self.collectionView(collectionView, numberOfItemsInSection: i)
-                
-                for j in 0..<itemsCount {
-                    indexPath = NSIndexPath(forRow: j, inSection: i)
+            if snapEnabled {
+                for i in 1..<sectionsCount {
+                    let itemsCount = self.collectionView(collectionView, numberOfItemsInSection: i)
                     
-                    let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
-                    
-                    if let cell = cell where cell.value == value {
-                        delegate?.didSelectValue(cell.value)
-                        collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                    for j in 0..<itemsCount {
+                        indexPath = NSIndexPath(forRow: j, inSection: i)
                         
-                        break
+                        let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
+                        
+                        if let cell = cell where cell.value == value {
+                            delegate?.didSelectValue(cell.value)
+                            collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                            
+                            break
+                        }
                     }
                 }
+            } else {
+                let absoluteValue = value - minValue
+                let percent = absoluteValue / (maxValue - minValue)
+                let absolutePercent = invertValues ? (1.0 - percent) : percent
+                let offsetX = absolutePercent * (collectionView.contentSize.width - bounds.width)
+                
+                collectionView.contentOffset = CGPointMake(offsetX, collectionView.contentOffset.y)
             }
         }
     }

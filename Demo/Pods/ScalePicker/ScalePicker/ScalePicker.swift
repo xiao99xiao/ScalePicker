@@ -323,12 +323,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public var currentValue: CGFloat = 0.0 {
         didSet {
             if shouldUpdatePicker {
-                let snapEnabled = picker.snapEnabled
-
-                picker.snapEnabled = true
-                picker.scrollToValue(currentValue, animated: true)
-                
-                picker.snapEnabled = snapEnabled
+                picker.scrollToValue(currentValue, animated: true)                
             }
             
             valueLabel.attributedText = valueFormatter(currentValue)
