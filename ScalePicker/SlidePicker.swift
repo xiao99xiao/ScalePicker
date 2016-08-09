@@ -30,21 +30,21 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     @IBInspectable
     public var invertValues: Bool = false {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
     public var fillSides: Bool = false {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
     public var allTicksWithSameSize: Bool = false {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -64,7 +64,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     @IBInspectable
     public var showPlusForPositiveValues: Bool = true {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -77,14 +77,14 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     @IBInspectable
     public var showTickLabels: Bool = true {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
     public var highlightCenterTick: Bool = true {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -98,7 +98,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     @IBInspectable
     public var spaceBetweenTicks: CGFloat = 20.0 {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -119,6 +119,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     private var maskLeftLayer: CAGradientLayer!
     private var maskRightLayer: CAGradientLayer!
     private var uiBlockView: UIView!
+    private var reloadTimer: NSTimer?
 
     public var centerView: UIView? {
         didSet {
@@ -136,20 +137,20 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             
             updateSectionsCount()
 
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
 
     @IBInspectable
     public var tickColor: UIColor = UIColor.whiteColor() {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
     private var sectionsCount: Int = 0 {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -202,7 +203,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     
     public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
         didSet {
-            collectionView.reloadData()
+            requestCollectionViewReloading()
         }
     }
     
@@ -262,10 +263,20 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         maskLayer.addSublayer(maskRightLayer)
         
         uiBlockView = UIView(frame: self.bounds)
-        
-//        layer.addSublayer(maskLayer)
     }
    
+    private func requestCollectionViewReloading() {
+        reloadTimer?.invalidate()
+        
+        reloadTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(SlidePicker.reloadCollectionView), userInfo: nil, repeats: false)
+    }
+    
+    func reloadCollectionView() {
+        reloadTimer?.invalidate()
+
+        collectionView.reloadData()
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -472,16 +483,17 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     }
                 }
             } else {
-                collectionView.performBatchUpdates({
+                collectionView.reloadData()
+                let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC)))
+                
+                dispatch_after(popTime, dispatch_get_main_queue()) {
+                    let absoluteValue = value - self.minValue
+                    let percent = absoluteValue / (self.maxValue - self.minValue)
+                    let absolutePercent = self.invertValues ? (1.0 - percent) : percent
+                    let offsetX = absolutePercent * (self.collectionView.contentSize.width - self.bounds.width)
                     
-                    }, completion: { (finished) in
-                        let absoluteValue = value - self.minValue
-                        let percent = absoluteValue / (self.maxValue - self.minValue)
-                        let absolutePercent = self.invertValues ? (1.0 - percent) : percent
-                        let offsetX = absolutePercent * (self.collectionView.contentSize.width - self.bounds.width)
-                        
-                        self.collectionView.contentOffset = CGPointMake(offsetX, self.collectionView.contentOffset.y)
-                })
+                    self.collectionView.contentOffset = CGPointMake(offsetX, self.collectionView.contentOffset.y)
+                }
             }
         }
     }
