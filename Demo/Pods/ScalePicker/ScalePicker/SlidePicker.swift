@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 
 public protocol SlidePickerDelegate {
-    func didSelectValue(value: CGFloat)
-    func didChangeContentOffset(offset: CGFloat, progress: CGFloat)
+    func didSelectValue(_ value: CGFloat)
+    func didChangeContentOffset(_ offset: CGFloat, progress: CGFloat)
 }
 
 @IBDesignable
-public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    public var delegate: SlidePickerDelegate?
+open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    open var delegate: SlidePickerDelegate?
 
     @IBInspectable
-    public var gradientMaskEnabled: Bool = false {
+    open var gradientMaskEnabled: Bool = false {
         didSet {
             layer.mask = gradientMaskEnabled ? maskLayer : nil
             
@@ -28,28 +28,28 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
-    public var invertValues: Bool = false {
+    open var invertValues: Bool = false {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var fillSides: Bool = false {
+    open var fillSides: Bool = false {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var allTicksWithSameSize: Bool = false {
+    open var allTicksWithSameSize: Bool = false {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var blockedUI: Bool = false {
+    open var blockedUI: Bool = false {
         didSet {
             uiBlockView.removeFromSuperview()
             
@@ -62,66 +62,66 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
-    public var showPlusForPositiveValues: Bool = true {
+    open var showPlusForPositiveValues: Bool = true {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var snapEnabled: Bool = true
+    open var snapEnabled: Bool = true
     
     @IBInspectable
-    public var fireValuesOnScrollEnabled: Bool = true
+    open var fireValuesOnScrollEnabled: Bool = true
     
     @IBInspectable
-    public var showTickLabels: Bool = true {
+    open var showTickLabels: Bool = true {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var highlightCenterTick: Bool = true {
+    open var highlightCenterTick: Bool = true {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var bounces: Bool = false {
+    open var bounces: Bool = false {
         didSet {
             collectionView.bounces = bounces
         }
     }
     
     @IBInspectable
-    public var spaceBetweenTicks: CGFloat = 20.0 {
+    open var spaceBetweenTicks: CGFloat = 20.0 {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var centerViewOffsetY: CGFloat = 0.0 {
+    open var centerViewOffsetY: CGFloat = 0.0 {
         didSet {
             layoutSubviews()
         }
     }
 
-    private let cellId = "collectionViewCellId"
+    fileprivate let cellId = "collectionViewCellId"
 
-    private var flowLayout = SlidePickerFlowLayout()
-    private var collectionView: UICollectionView!
-    private var tickValue: CGFloat = 1.0
+    fileprivate var flowLayout = SlidePickerFlowLayout()
+    fileprivate var collectionView: UICollectionView!
+    fileprivate var tickValue: CGFloat = 1.0
     
-    private var maskLayer: CALayer!
-    private var maskLeftLayer: CAGradientLayer!
-    private var maskRightLayer: CAGradientLayer!
-    private var uiBlockView: UIView!
-    private var reloadTimer: NSTimer?
+    fileprivate var maskLayer: CALayer!
+    fileprivate var maskLeftLayer: CAGradientLayer!
+    fileprivate var maskRightLayer: CAGradientLayer!
+    fileprivate var uiBlockView: UIView!
+    fileprivate var reloadTimer: Timer?
 
-    public var centerView: UIView? {
+    open var centerView: UIView? {
         didSet {
             if let centerView = centerView {
                 centerViewOffsetY = 0.0
@@ -131,9 +131,9 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    public var values: [CGFloat]? {
+    open var values: [CGFloat]? {
         didSet {
-            guard let values = values where values.count > 1 else { return; }
+            guard let values = values , values.count > 1 else { return; }
             
             updateSectionsCount()
 
@@ -142,33 +142,33 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
 
     @IBInspectable
-    public var tickColor: UIColor = UIColor.whiteColor() {
+    open var tickColor: UIColor = UIColor.white {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
-    private var sectionsCount: Int = 0 {
+    fileprivate var sectionsCount: Int = 0 {
         didSet {
             requestCollectionViewReloading()
         }
     }
     
     @IBInspectable
-    public var minValue: CGFloat = 0.0 {
+    open var minValue: CGFloat = 0.0 {
         didSet {
             updateSectionsCount()
         }
     }
     
     @IBInspectable
-    public var maxValue: CGFloat = 0.0 {
+    open var maxValue: CGFloat = 0.0 {
         didSet {
             updateSectionsCount()
         }
     }
     
-    private func updateSectionsCount() {
+    fileprivate func updateSectionsCount() {
         guard minValue < maxValue else {
             return
         }
@@ -193,7 +193,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     @IBInspectable
-    public var numberOfTicksBetweenValues: UInt = 2 {
+    open var numberOfTicksBetweenValues: UInt = 2 {
         didSet {
             tickValue = 1.0 / CGFloat(numberOfTicksBetweenValues + 1)
             
@@ -201,7 +201,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
+    open var currentTransform: CGAffineTransform = CGAffineTransform.identity {
         didSet {
             requestCollectionViewReloading()
         }
@@ -219,10 +219,10 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         commonInit()
     }
     
-    public func commonInit() {
-        userInteractionEnabled = true
+    open func commonInit() {
+        isUserInteractionEnabled = true
         
-        flowLayout.scrollDirection = .Horizontal
+        flowLayout.scrollDirection = .horizontal
         flowLayout.minimumInteritemSpacing = 0.0
         flowLayout.minimumLineSpacing = 0.0
 
@@ -230,34 +230,34 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = UIColor.clearColor()
+        collectionView.backgroundColor = UIColor.clear
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.bounces = false
         collectionView.allowsSelection = false
         collectionView.delaysContentTouches = true
 
-        collectionView.registerClass(SlidePickerCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(SlidePickerCell.self, forCellWithReuseIdentifier: cellId)
         
         addSubview(collectionView)
         
         maskLayer = CALayer()
         
-        maskLayer.frame = CGRectZero
-        maskLayer.backgroundColor = UIColor.clearColor().CGColor
+        maskLayer.frame = CGRect.zero
+        maskLayer.backgroundColor = UIColor.clear.cgColor
         
         maskLeftLayer = CAGradientLayer()
 
         maskLeftLayer.frame = maskLayer.bounds
-        maskLeftLayer.colors = [UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor, UIColor.blackColor().CGColor]
-        maskLeftLayer.startPoint = CGPointMake(0.1, 0.0)
-        maskLeftLayer.endPoint = CGPointMake(0.9, 0.0)
+        maskLeftLayer.colors = [UIColor.black.withAlphaComponent(0.0).cgColor, UIColor.black.cgColor]
+        maskLeftLayer.startPoint = CGPoint(x: 0.1, y: 0.0)
+        maskLeftLayer.endPoint = CGPoint(x: 0.9, y: 0.0)
 
         maskRightLayer = CAGradientLayer()
         
         maskRightLayer.frame = maskLayer.bounds
-        maskRightLayer.colors = [UIColor.blackColor().CGColor, UIColor.blackColor().colorWithAlphaComponent(0.0).CGColor]
-        maskRightLayer.startPoint = CGPointMake(0.1, 0.0)
-        maskRightLayer.endPoint = CGPointMake(0.9, 0.0)
+        maskRightLayer.colors = [UIColor.black.cgColor, UIColor.black.withAlphaComponent(0.0).cgColor]
+        maskRightLayer.startPoint = CGPoint(x: 0.1, y: 0.0)
+        maskRightLayer.endPoint = CGPoint(x: 0.9, y: 0.0)
 
         maskLayer.addSublayer(maskLeftLayer)
         maskLayer.addSublayer(maskRightLayer)
@@ -265,10 +265,10 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         uiBlockView = UIView(frame: self.bounds)
     }
    
-    private func requestCollectionViewReloading() {
+    fileprivate func requestCollectionViewReloading() {
         reloadTimer?.invalidate()
         
-        reloadTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(SlidePicker.reloadCollectionView), userInfo: nil, repeats: false)
+        reloadTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(SlidePicker.reloadCollectionView), userInfo: nil, repeats: false)
     }
     
     func reloadCollectionView() {
@@ -277,13 +277,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         collectionView.reloadData()
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         
         collectionView.frame = bounds
         
-        centerView?.center = CGPointMake(frame.size.width / 2,
-                                         centerViewOffsetY + (frame.size.height / 2) - 2)
+        centerView?.center = CGPoint(x: frame.size.width / 2,
+                                         y: centerViewOffsetY + (frame.size.height / 2) - 2)
         if gradientMaskEnabled {
             let gradientMaskWidth = frame.size.width / 2
             
@@ -291,7 +291,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             maskLeftLayer.frame = CGRect(x: 0, y: 0, width: gradientMaskWidth, height: frame.size.height)
             maskRightLayer.frame = CGRect(x: frame.size.width - gradientMaskWidth, y: 0, width: gradientMaskWidth, height: frame.size.height)
         } else {
-            maskLayer.frame = CGRectZero
+            maskLayer.frame = CGRect.zero
             maskLeftLayer.frame = maskLayer.bounds
             maskRightLayer.frame = maskLayer.bounds
         }
@@ -299,40 +299,40 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         uiBlockView.frame = bounds
     }
     
-    public override func prepareForInterfaceBuilder() {
+    open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         
         layoutSubviews()
     }
     
-    public func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         guard sectionsCount > 2 else {
-            return CGSizeZero
+            return CGSize.zero
         }
         
-        let regularCellSize = CGSizeMake(spaceBetweenTicks, bounds.height)
+        let regularCellSize = CGSize(width: spaceBetweenTicks, height: bounds.height)
         
-        if (indexPath.section == 0) || (indexPath.section == (sectionsCount - 1)) {
+        if ((indexPath as NSIndexPath).section == 0) || ((indexPath as NSIndexPath).section == (sectionsCount - 1)) {
             if fillSides {
                 let sideItems = (Int(frame.size.width / spaceBetweenTicks) + 2) / 2
 
-                if (indexPath.section == 0 && indexPath.row == 0) ||
-                    (indexPath.section == sectionsCount - 1 && indexPath.row == sideItems - 1)  {
+                if ((indexPath as NSIndexPath).section == 0 && (indexPath as NSIndexPath).row == 0) ||
+                    ((indexPath as NSIndexPath).section == sectionsCount - 1 && (indexPath as NSIndexPath).row == sideItems - 1)  {
                     
-                    return CGSizeMake((spaceBetweenTicks / 2) - SlidePickerCell.strokeWidth, bounds.height)
+                    return CGSize(width: (spaceBetweenTicks / 2) - SlidePickerCell.strokeWidth, height: bounds.height)
                 } else {
                     return regularCellSize
                 }
             } else {
-                return CGSizeMake((bounds.width / 2) - (spaceBetweenTicks / 2), bounds.height)
+                return CGSize(width: (bounds.width / 2) - (spaceBetweenTicks / 2), height: bounds.height)
             }
         }
         
         return regularCellSize
     }
     
-    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard sectionsCount > 2 else {
             return 0
         }
@@ -361,9 +361,9 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
 
-    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellId, forIndexPath: indexPath) as! SlidePickerCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SlidePickerCell
         
         cell.indexPath = indexPath
         cell.tickColor = tickColor
@@ -372,33 +372,33 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         cell.currentTransform = currentTransform
         cell.showPlusForPositiveValues = showPlusForPositiveValues
 
-        if indexPath.section == 0 {
-            cell.updateValue(invertValues ? CGFloat.max : CGFloat.min, type: fillSides ? .BigStroke : .Empty)
-        } else if indexPath.section == sectionsCount - 1 {
-            cell.updateValue(invertValues ? CGFloat.min : CGFloat.max, type: fillSides ? .BigStroke : .Empty)
+        if (indexPath as NSIndexPath).section == 0 {
+            cell.updateValue(invertValues ? CGFloat.greatestFiniteMagnitude : CGFloat.leastNormalMagnitude, type: fillSides ? .bigStroke : .empty)
+        } else if (indexPath as NSIndexPath).section == sectionsCount - 1 {
+            cell.updateValue(invertValues ? CGFloat.leastNormalMagnitude : CGFloat.greatestFiniteMagnitude, type: fillSides ? .bigStroke : .empty)
         } else {
             if let values = values {
                 cell.highlightTick = false
                 
-                let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
+                let index = ((indexPath as NSIndexPath).section - 1) * Int(numberOfTicksBetweenValues + 1) + (indexPath as NSIndexPath).row
                 let currentValue = values[index]
                 
-                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .BigStroke : .SmallStroke)
+                cell.updateValue(currentValue, type: allTicksWithSameSize || (indexPath as NSIndexPath).row == 0 ? .bigStroke : .smallStroke)
             } else {
-                let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
+                let currentValue = invertValues ? maxValue - CGFloat((indexPath as NSIndexPath).section - 1) : minValue + CGFloat((indexPath as NSIndexPath).section - 1)
 
-                if indexPath.row == 0 {
+                if (indexPath as NSIndexPath).row == 0 {
                     if highlightCenterTick {
                         cell.highlightTick = (currentValue == ((maxValue - minValue) * 0.5 + minValue))
                     } else {
                         cell.highlightTick = false
                     }
                     
-                    cell.updateValue(currentValue, type: .BigStroke)
+                    cell.updateValue(currentValue, type: .bigStroke)
                 } else {
-                    let value = invertValues ? currentValue - tickValue * CGFloat(indexPath.row) : currentValue + tickValue * CGFloat(indexPath.row)
+                    let value = invertValues ? currentValue - tickValue * CGFloat((indexPath as NSIndexPath).row) : currentValue + tickValue * CGFloat((indexPath as NSIndexPath).row)
                     cell.showTickLabels = allTicksWithSameSize ? false : showTickLabels
-                    cell.updateValue(value, type: allTicksWithSameSize ? .BigStroke : .SmallStroke)
+                    cell.updateValue(value, type: allTicksWithSameSize ? .bigStroke : .smallStroke)
                 }
             }
         }
@@ -406,24 +406,24 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         return cell
     }
     
-    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sectionsCount
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updateSelectedValue(true)
     }
     
-    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         updateSelectedValue(true)
     }
     
-    public func scrollViewDidScroll(scrollView: UIScrollView) {
+    open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateSelectedValue(false)
         updateCurrentProgress()
     }
     
-    public func updateCurrentProgress() {
+    open func updateCurrentProgress() {
         let offset = collectionView.contentOffset.x
         let contentSize = collectionView.contentSize.width
         
@@ -436,8 +436,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    public func scrollToValue(value: CGFloat, animated: Bool) {
-        var indexPath: NSIndexPath?
+    open func scrollToValue(_ value: CGFloat, animated: Bool) {
+        var indexPath: IndexPath?
         
         guard sectionsCount > 0 else {
             return
@@ -456,13 +456,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
             let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
 
-            indexPath = NSIndexPath(forRow: row, inSection: section + 1)
+            indexPath = IndexPath(row: row, section: section + 1)
             
-            let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
+            let cell = collectionView(collectionView, cellForItemAt: indexPath!) as? SlidePickerCell
             
-            if let cell = cell where cell.value == value {
+            if let cell = cell , cell.value == value {
                 delegate?.didSelectValue(cell.value)
-                collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
             }
         } else {
             if snapEnabled {
@@ -470,13 +470,13 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     let itemsCount = self.collectionView(collectionView, numberOfItemsInSection: i)
                     
                     for j in 0..<itemsCount {
-                        indexPath = NSIndexPath(forRow: j, inSection: i)
+                        indexPath = IndexPath(row: j, section: i)
                         
-                        let cell = collectionView(collectionView, cellForItemAtIndexPath: indexPath!) as? SlidePickerCell
+                        let cell = collectionView(collectionView, cellForItemAt: indexPath!) as? SlidePickerCell
                         
-                        if let cell = cell where cell.value == value {
+                        if let cell = cell , cell.value == value {
                             delegate?.didSelectValue(cell.value)
-                            collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                            collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
                             
                             break
                         }
@@ -484,38 +484,38 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                 }
             } else {
                 collectionView.reloadData()
-                let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC)))
+                let popTime = DispatchTime.now() + Double(Int64(0.5 * CGFloat(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
                 
-                dispatch_after(popTime, dispatch_get_main_queue()) {
+                DispatchQueue.main.asyncAfter(deadline: popTime) {
                     let absoluteValue = value - self.minValue
                     let percent = absoluteValue / (self.maxValue - self.minValue)
                     let absolutePercent = self.invertValues ? (1.0 - percent) : percent
                     let offsetX = absolutePercent * (self.collectionView.contentSize.width - self.bounds.width)
                     
-                    self.collectionView.contentOffset = CGPointMake(offsetX, self.collectionView.contentOffset.y)
+                    self.collectionView.contentOffset = CGPoint(x: offsetX, y: self.collectionView.contentOffset.y)
                 }
             }
         }
     }
     
-    public func increaseValue() {
-        let point = CGPointMake(collectionView.center.x + collectionView.contentOffset.x + spaceBetweenTicks * 2 / 3,
-                                collectionView.center.y + collectionView.contentOffset.y)
+    open func increaseValue() {
+        let point = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x + spaceBetweenTicks * 2 / 3,
+                                y: collectionView.center.y + collectionView.contentOffset.y)
         
         scrollToNearestCellAtPoint(point)
     }
     
-    public func decreaseValue() {
-        let point = CGPointMake(collectionView.center.x + collectionView.contentOffset.x - spaceBetweenTicks * 2 / 3,
-            collectionView.center.y + collectionView.contentOffset.y)
+    open func decreaseValue() {
+        let point = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x - spaceBetweenTicks * 2 / 3,
+            y: collectionView.center.y + collectionView.contentOffset.y)
         
         scrollToNearestCellAtPoint(point)
     }
     
-    private func updateSelectedValue(tryToSnap: Bool) {
+    fileprivate func updateSelectedValue(_ tryToSnap: Bool) {
         if snapEnabled {
-            let initialPinchPoint = CGPointMake(collectionView.center.x + collectionView.contentOffset.x,
-                                                collectionView.center.y + collectionView.contentOffset.y)
+            let initialPinchPoint = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x,
+                                                y: collectionView.center.y + collectionView.contentOffset.y)
             
             scrollToNearestCellAtPoint(initialPinchPoint, skipScroll: fireValuesOnScrollEnabled && !tryToSnap)
         } else {
@@ -527,17 +527,17 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    private func scrollToNearestCellAtPoint(point: CGPoint, skipScroll: Bool = false) {
+    fileprivate func scrollToNearestCellAtPoint(_ point: CGPoint, skipScroll: Bool = false) {
         var centerCell: SlidePickerCell?
         
-        let indexPath = collectionView.indexPathForItemAtPoint(point)
+        let indexPath = collectionView.indexPathForItem(at: point)
         
         if let iPath = indexPath {
-            if (iPath.section == 0) || (iPath.section == (sectionsCount - 1)) {
+            if ((iPath as NSIndexPath).section == 0) || ((iPath as NSIndexPath).section == (sectionsCount - 1)) {
                 return
             }
             
-            centerCell = self.collectionView(collectionView, cellForItemAtIndexPath: iPath) as? SlidePickerCell
+            centerCell = self.collectionView(collectionView, cellForItemAt: iPath) as? SlidePickerCell
         }
         
         guard let cell = centerCell else {
@@ -547,39 +547,39 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         delegate?.didSelectValue(cell.value)
         
         if !skipScroll {
-            collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: true)
+            collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: true)
         }
     }
 }
 
 public enum SlidePickerCellType {
-    case Empty
-    case BigStroke
-    case SmallStroke
+    case empty
+    case bigStroke
+    case smallStroke
 }
 
-public class SlidePickerCell: UICollectionViewCell {
-    public static var signWidth: CGFloat = {
+open class SlidePickerCell: UICollectionViewCell {
+    open static var signWidth: CGFloat = {
         let sign = "-"
-        let maximumTextSize = CGSizeMake(100, 100)
+        let maximumTextSize = CGSize(width: 100, height: 100)
         let textString = sign as NSString
-        let font = UIFont.systemFontOfSize(12.0)
+        let font = UIFont.systemFont(ofSize: 12.0)
         
-        let rect = textString.boundingRectWithSize(maximumTextSize, options: .UsesLineFragmentOrigin,
+        let rect = textString.boundingRect(with: maximumTextSize, options: .usesLineFragmentOrigin,
                                                    attributes: [NSFontAttributeName: font], context: nil)
 
         return (rect.width / 2) + 1
     }()
     
-    public static let strokeWidth: CGFloat = 1.5
+    open static let strokeWidth: CGFloat = 1.5
     
-    public var showTickLabels = true
-    public var showPlusForPositiveValues = true
-    public var highlightTick = false
+    open var showTickLabels = true
+    open var showPlusForPositiveValues = true
+    open var highlightTick = false
 
-    private var type = SlidePickerCellType.Empty
+    fileprivate var type = SlidePickerCellType.empty
     
-    public var value: CGFloat = 0.0 {
+    open var value: CGFloat = 0.0 {
         didSet {
             let strValue = String(format: "%0.0f", value)
             
@@ -591,21 +591,21 @@ public class SlidePickerCell: UICollectionViewCell {
         }
     }
     
-    public var indexPath: NSIndexPath?
+    open var indexPath: IndexPath?
     
-    private let strokeView = UIView()
-    private let valueLabel = UILabel()
-    private let strokeWidth: CGFloat = SlidePickerCell.strokeWidth
-    private var bigStrokePaddind: CGFloat = 4.0
-    private var smallStrokePaddind: CGFloat = 8.0
+    fileprivate let strokeView = UIView()
+    fileprivate let valueLabel = UILabel()
+    fileprivate let strokeWidth: CGFloat = SlidePickerCell.strokeWidth
+    fileprivate var bigStrokePaddind: CGFloat = 4.0
+    fileprivate var smallStrokePaddind: CGFloat = 8.0
     
-    public var currentTransform: CGAffineTransform = CGAffineTransformIdentity {
+    open var currentTransform: CGAffineTransform = CGAffineTransform.identity {
         didSet {
             valueLabel.transform = currentTransform
         }
     }
     
-    public var tickColor = UIColor.whiteColor() {
+    open var tickColor = UIColor.white {
         didSet {
             strokeView.backgroundColor = tickColor
             valueLabel.textColor = tickColor
@@ -622,7 +622,7 @@ public class SlidePickerCell: UICollectionViewCell {
         commonInit()
     }
     
-    public override func prepareForReuse() {
+    open override func prepareForReuse() {
         super.prepareForReuse()
         
         strokeView.alpha = 0.0
@@ -631,73 +631,73 @@ public class SlidePickerCell: UICollectionViewCell {
         indexPath = nil
     }
     
-    public func updateValue(value: CGFloat, type: SlidePickerCellType) {
+    open func updateValue(_ value: CGFloat, type: SlidePickerCellType) {
         self.value = value
         self.type = type
         
         layoutSubviews()
     }
     
-    private func commonInit() {
-        strokeView.backgroundColor = UIColor.whiteColor()
+    fileprivate func commonInit() {
+        strokeView.backgroundColor = UIColor.white
         strokeView.alpha = 0.0
         strokeView.layer.masksToBounds = true
         strokeView.layer.cornerRadius = strokeWidth / 2
         
-        valueLabel.textAlignment = .Center
-        valueLabel.font = UIFont.systemFontOfSize(12.0)
-        valueLabel.textColor = UIColor.whiteColor()
+        valueLabel.textAlignment = .center
+        valueLabel.font = UIFont.systemFont(ofSize: 12.0)
+        valueLabel.textColor = UIColor.white
         valueLabel.alpha = 0.0
 
         contentView.addSubview(strokeView)
         contentView.addSubview(valueLabel)
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         
         let height = frame.size.height
         let xShift: CGFloat = (showPlusForPositiveValues && value > 0.0001) || value < -0.0001 ? SlidePickerCell.signWidth : 0.0
         
         switch type {
-            case .Empty:
+            case .empty:
                 strokeView.alpha = 0.0
                 valueLabel.alpha = 0.0
                 break
                 
-            case .BigStroke:
+            case .bigStroke:
                 let widthAddition: CGFloat = highlightTick ? 0.5 : 0.0
 
                 strokeView.alpha = 1.0
                 valueLabel.alpha = showTickLabels ? 1.0 : 0.0
                 
                 if showTickLabels {
-                    valueLabel.frame = CGRectMake(-5 - xShift, 0, frame.size.width + 10, height / 3)
+                    valueLabel.frame = CGRect(x: -5 - xShift, y: 0, width: frame.size.width + 10, height: height / 3)
                 } else {
-                    valueLabel.frame = CGRectZero
+                    valueLabel.frame = CGRect.zero
                 }
                 
-                strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
-                                              (height / 3) + bigStrokePaddind, strokeWidth + widthAddition * 2,
-                                              (height / 2) - (bigStrokePaddind * 2))
+                strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
+                                              y: (height / 3) + bigStrokePaddind, width: strokeWidth + widthAddition * 2,
+                                              height: (height / 2) - (bigStrokePaddind * 2))
 
                 strokeView.layer.cornerRadius = strokeView.frame.width
                 
                 break
 
-            case .SmallStroke:
+            case .smallStroke:
                 strokeView.alpha = 1.0
                 valueLabel.alpha = 0.0
                 
                 if showTickLabels {
-                    valueLabel.frame = CGRectMake(-xShift, 0, frame.size.width, height / 2)
+                    valueLabel.frame = CGRect(x: -xShift, y: 0, width: frame.size.width, height: height / 2)
                 } else {
-                    valueLabel.frame = CGRectZero
+                    valueLabel.frame = CGRect.zero
                 }
                 
-                strokeView.frame = CGRectMake((frame.size.width / 2) - (strokeWidth / 2),
-                                              (height / 3) + smallStrokePaddind, strokeWidth,
-                                              (height / 2) - (smallStrokePaddind * 2))
+                strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2),
+                                              y: (height / 3) + smallStrokePaddind, width: strokeWidth,
+                                              height: (height / 2) - (smallStrokePaddind * 2))
                 
                 strokeView.layer.cornerRadius = strokeView.frame.width
                 
@@ -707,29 +707,29 @@ public class SlidePickerCell: UICollectionViewCell {
 }
 
 internal extension UIImage {
-    internal func tintImage(color: UIColor) -> UIImage {
+    internal func tintImage(_ color: UIColor) -> UIImage {
         let scale: CGFloat = 2.0
         
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         
         let context = UIGraphicsGetCurrentContext()
         
-        CGContextTranslateCTM(context, 0, size.height)
-        CGContextScaleCTM(context, 1.0, -1.0)
+        context?.translateBy(x: 0, y: size.height)
+        context?.scaleBy(x: 1.0, y: -1.0)
         
-        let rect = CGRectMake(0, 0, size.width, size.height)
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         
-        CGContextSetBlendMode(context, .Normal)
-        CGContextDrawImage(context, rect, CGImage)
+        context?.setBlendMode(.normal)
+        context?.draw(cgImage!, in: rect)
         
-        CGContextSetBlendMode(context, .SourceIn)
+        context?.setBlendMode(.sourceIn)
         color.setFill()
-        CGContextFillRect(context, rect)
+        context?.fill(rect)
         
         let coloredImage = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()
         
-        return coloredImage.imageWithRenderingMode(.AlwaysOriginal)
+        return coloredImage!.withRenderingMode(.alwaysOriginal)
     }
 }

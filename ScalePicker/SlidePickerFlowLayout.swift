@@ -9,6 +9,6 @@
 import Foundation
 import UIKit
 
-public class SlidePickerFlowLayout: UICollectionViewFlowLayout {
+open class SlidePickerFlowLayout: UICollectionViewFlowLayout {
     
 }
