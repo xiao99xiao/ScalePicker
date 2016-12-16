@@ -11,7 +11,9 @@ import UIKit
 
 public protocol SlidePickerDelegate {
     func didSelectValue(value: CGFloat)
-    func didChangeContentOffset(offset: CGFloat, progress: CGFloat)
+    func didChangeContentOffset(offset: CGFloat, progress: CGFloat)    
+    func didBeginChangingValue()
+    func didEndChangingValue()
 }
 
 @IBDesignable
@@ -410,19 +412,6 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         return sectionsCount
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        updateSelectedValue(true)
-    }
-    
-    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        updateSelectedValue(true)
-    }
-    
-    public func scrollViewDidScroll(scrollView: UIScrollView) {
-        updateSelectedValue(false)
-        updateCurrentProgress()
-    }
-    
     public func updateCurrentProgress() {
         let offset = collectionView.contentOffset.x
         let contentSize = collectionView.contentSize.width
@@ -703,6 +692,32 @@ public class SlidePickerCell: UICollectionViewCell {
                 
                 break
         }
+    }
+}
+
+extension SlidePicker: UIScrollViewDelegate {
+    public func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        delegate?.didBeginChangingValue()
+    }
+    
+    public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        delegate?.didBeginChangingValue()
+    }
+    
+    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        updateSelectedValue(true)
+        delegate?.didEndChangingValue()
+    }
+    
+    public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        updateSelectedValue(true)
+        delegate?.didEndChangingValue()
+    }
+
+    
+    public func scrollViewDidScroll(scrollView: UIScrollView) {
+        updateSelectedValue(false)
+        updateCurrentProgress()
     }
 }
 

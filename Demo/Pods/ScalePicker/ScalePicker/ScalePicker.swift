@@ -19,6 +19,8 @@ public enum ScalePickerValuePosition {
 
 public protocol ScalePickerDelegate {
     func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
+    func didBeginChangingValue(picker: ScalePicker)
+    func didEndChangingValue(picker: ScalePicker)
 }
 
 @IBDesignable
@@ -495,6 +497,15 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         shouldUpdatePicker = true
     }
+    
+    public func didBeginChangingValue() {
+        delegate?.didBeginChangingValue(self)
+    }
+    
+    public func didEndChangingValue() {
+        delegate?.didEndChangingValue(self)
+    }
+
     
     public func didChangeContentOffset(offset: CGFloat, progress: CGFloat) {
         layoutProgressView(progress)

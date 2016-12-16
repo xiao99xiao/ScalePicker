@@ -494,6 +494,14 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         print("Changed scale picker value: \(value)")
     }
     
+    func didBeginChangingValue(picker: ScalePicker) {
+        print("Begin changing scale picker value")
+    }
+    
+    func didEndChangingValue(picker: ScalePicker) {
+        print("End changing scale picker value")
+    }
+    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
