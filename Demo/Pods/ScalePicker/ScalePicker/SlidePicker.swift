@@ -16,6 +16,8 @@ public protocol SlidePickerDelegate {
     func didEndChangingValue()
 }
 
+public typealias CompleteHandler = (()->Void)
+
 @IBDesignable
 public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     public var delegate: SlidePickerDelegate?
@@ -425,7 +427,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    public func scrollToValue(value: CGFloat, animated: Bool) {
+    public func scrollToValue(value: CGFloat, animated: Bool, complete: CompleteHandler? = nil) {
         var indexPath: NSIndexPath?
         
         guard sectionsCount > 0 else {
@@ -452,6 +454,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
             if let cell = cell where cell.value == value {
                 delegate?.didSelectValue(cell.value)
                 collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
+                complete?()
             }
         } else {
             if snapEnabled {
@@ -466,7 +469,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                         if let cell = cell where cell.value == value {
                             delegate?.didSelectValue(cell.value)
                             collectionView.scrollToItemAtIndexPath(indexPath!, atScrollPosition: .CenteredHorizontally, animated: animated)
-                            
+                            complete?()
                             break
                         }
                     }
@@ -482,6 +485,8 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     let offsetX = absolutePercent * (self.collectionView.contentSize.width - self.bounds.width)
                     
                     self.collectionView.contentOffset = CGPointMake(offsetX, self.collectionView.contentOffset.y)
+                    
+                    complete?()
                 }
             }
         }
