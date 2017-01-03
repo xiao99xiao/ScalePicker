@@ -46,6 +46,9 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
+    public var notifyOnChanges: Bool = true
+    
+    @IBInspectable
     public var gradientMaskEnabled: Bool = false {
         didSet {
             picker.gradientMaskEnabled = gradientMaskEnabled
@@ -334,6 +337,21 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
+    public func updateCurrentValue(value: CGFloat, animated: Bool, notify: Bool = false) {
+        let oldNotifyOnChanges = notifyOnChanges
+        
+        notifyOnChanges = notify
+        
+        picker.scrollToValue(currentValue, animated: animated)
+        
+        valueLabel.attributedText = valueFormatter(currentValue)
+        
+        layoutValueLabel()
+        updateProgressAsync()
+        
+        notifyOnChanges = oldNotifyOnChanges
+    }
+    
     private func updateProgressAsync() {
         let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * CGFloat(NSEC_PER_SEC)))
         
@@ -458,9 +476,12 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public func reset() {
         currentValue = initialValue
-        delegate?.didChangeScaleValue(self, value: currentValue)
-        valueChangeHandler(currentValue)
-
+        
+        if notifyOnChanges {
+            delegate?.didChangeScaleValue(self, value: currentValue)
+            valueChangeHandler(currentValue)
+        }
+        
         progressView.alpha = 0.0
         updateProgressAsync()
     }
@@ -489,7 +510,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     public func didSelectValue(value: CGFloat) {
         shouldUpdatePicker = false
         
-        if value != currentValue {
+        if notifyOnChanges && (value != currentValue) {
             currentValue = value
             delegate?.didChangeScaleValue(self, value: value)
             valueChangeHandler(value)
