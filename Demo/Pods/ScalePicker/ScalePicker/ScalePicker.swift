@@ -339,16 +339,16 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     
     public func updateCurrentValue(value: CGFloat, animated: Bool, notify: Bool = false) {
         let oldNotifyOnChanges = notifyOnChanges
+        let oldShouldUpdatePicker = shouldUpdatePicker
         
+        shouldUpdatePicker = false
         notifyOnChanges = notify
         
-        picker.scrollToValue(currentValue, animated: animated)
+        picker.scrollToValue(value, animated: animated)
         
-        valueLabel.attributedText = valueFormatter(currentValue)
+        currentValue = value
         
-        layoutValueLabel()
-        updateProgressAsync()
-        
+        shouldUpdatePicker = oldShouldUpdatePicker
         notifyOnChanges = oldNotifyOnChanges
     }
     
