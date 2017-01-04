@@ -80,7 +80,32 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         form.rowNavigationOptions = XLFormRowNavigationOptions.Enabled
         
-        var section = XLFormSectionDescriptor.formSectionWithTitle("Properties")
+        var section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
+        
+        form.addFormSection(section)
+        
+        createButtonRow("increaseValue", title: "Increase value", section: section) { [unowned self]() -> Void in
+            self.scaleView.increaseValue()
+        }
+        
+        createButtonRow("decreaseValue", title: "Decrease value", section: section) { [unowned self]() -> Void in
+            self.scaleView.decreaseValue()
+        }
+        
+        createButtonRow("resetValue", title: "Reset value", section: section) { [unowned self]() -> Void in
+            self.scaleView.reset()
+        }
+        
+        
+        createButtonRow("setValue", title: "Set value to 0 animated", section: section) { [unowned self]() -> Void in
+            self.scaleView.updateCurrentValue(0, animated: true, notify: true)
+        }
+        
+        createButtonRow("setValue", title: "Set value to 0 silent", section: section) { [unowned self]() -> Void in
+            self.scaleView.updateCurrentValue(0, animated: false, notify: false)
+        }
+        
+        section = XLFormSectionDescriptor.formSectionWithTitle("Properties")
         
         form.addFormSection(section)
         
@@ -456,23 +481,6 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         
         section.addFormRow(row)
 
-        
-        section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
-        
-        form.addFormSection(section)
-
-        createButtonRow("increaseValue", title: "Increase value", section: section) { [unowned self]() -> Void in
-            self.scaleView.increaseValue()
-        }
-
-        createButtonRow("decreaseValue", title: "Decrease value", section: section) { [unowned self]() -> Void in
-            self.scaleView.decreaseValue()
-        }
-        
-        createButtonRow("resetValue", title: "Reset value", section: section) { [unowned self]() -> Void in
-            self.scaleView.reset()
-        }
-        
         self.form = form
     }
     
