@@ -427,7 +427,7 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
         }
     }
     
-    public func scrollToValue(value: CGFloat, animated: Bool, complete: CompleteHandler? = nil) {
+    public func scrollToValue(value: CGFloat, animated: Bool, reload: Bool = true, complete: CompleteHandler? = nil) {
         var indexPath: NSIndexPath?
         
         guard sectionsCount > 0 else {
@@ -475,8 +475,15 @@ public class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollecti
                     }
                 }
             } else {
-                collectionView.reloadData()
-                let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC)))
+                var time: CGFloat = 0.0
+                
+                if reload {
+                    time = 0.5
+                    
+                    collectionView.reloadData()
+                }
+                
+                let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(time * CGFloat(NSEC_PER_SEC)))
                 
                 dispatch_after(popTime, dispatch_get_main_queue()) {
                     let absoluteValue = value - self.minValue
