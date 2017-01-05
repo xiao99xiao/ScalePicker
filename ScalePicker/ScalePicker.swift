@@ -322,6 +322,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private var picker: SlidePicker!
     private var shouldUpdatePicker: Bool = true
     private var notifyOnChanges: Bool = true
+    private var timer: NSTimer?
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -342,9 +343,19 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.scrollToValue(value, animated: animated, reload: false, complete: { [unowned self] in
             self.currentValue = value
             
-            self.shouldUpdatePicker = true
-            self.notifyOnChanges = true
+            self.scheduleTimer()
         })
+    }
+    
+    private func scheduleTimer() {
+        timer?.invalidate()
+        
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(ScalePicker.onTimer), userInfo: nil, repeats: false)
+    }
+    
+    internal func onTimer() {
+        self.shouldUpdatePicker = true
+        self.notifyOnChanges = true
     }
     
     private func updateProgressAsync() {
