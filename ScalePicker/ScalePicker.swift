@@ -46,9 +46,6 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    public var notifyOnChanges: Bool = true
-    
-    @IBInspectable
     public var gradientMaskEnabled: Bool = false {
         didSet {
             picker.gradientMaskEnabled = gradientMaskEnabled
@@ -323,7 +320,8 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     private var progressView = UIView()
     private var initialValue: CGFloat = 0.0
     private var picker: SlidePicker!
-    private var shouldUpdatePicker = true
+    private var shouldUpdatePicker: Bool = true
+    private var notifyOnChanges: Bool = true
 
     public var currentValue: CGFloat = 0.0 {
         didSet {
@@ -338,17 +336,14 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     public func updateCurrentValue(value: CGFloat, animated: Bool, notify: Bool = false) {
-        let oldNotifyOnChanges = notifyOnChanges
-        let oldShouldUpdatePicker = shouldUpdatePicker
-        
         shouldUpdatePicker = false
-        notifyOnChanges = notify
+        notifyOnChanges = false
         
         picker.scrollToValue(value, animated: animated, reload: false, complete: { [unowned self] in
             self.currentValue = value
             
-            self.shouldUpdatePicker = oldShouldUpdatePicker
-            self.notifyOnChanges = oldNotifyOnChanges
+            self.shouldUpdatePicker = true
+            self.notifyOnChanges = true
         })
     }
     
