@@ -344,7 +344,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         shouldUpdatePicker = false
         notifyOnChanges = notify
         
-        picker.scrollToValue(value, animated: animated, complete: { [unowned self] in
+        picker.scrollToValue(value, animated: animated, reload: false, complete: { [unowned self] in
             self.currentValue = value
             
             self.shouldUpdatePicker = oldShouldUpdatePicker
