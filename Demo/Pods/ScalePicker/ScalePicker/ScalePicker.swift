@@ -343,6 +343,11 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         picker.scrollToValue(value, animated: animated, reload: false, complete: { [unowned self] in
             self.currentValue = value
             
+            if notify {
+                self.delegate?.didChangeScaleValue(self, value: value)
+                self.valueChangeHandler(value)
+            }
+            
             self.scheduleTimer()
         })
     }
@@ -481,15 +486,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     public func reset() {
-        currentValue = initialValue
-        
-        if notifyOnChanges {
-            delegate?.didChangeScaleValue(self, value: currentValue)
-            valueChangeHandler(currentValue)
-        }
-        
-        progressView.alpha = 0.0
-        updateProgressAsync()
+        updateCurrentValue(initialValue, animated: false, notify: true)
     }
     
     public func increaseValue() {
