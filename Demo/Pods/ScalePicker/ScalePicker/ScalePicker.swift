@@ -482,7 +482,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     public func onDoubleTap(recognizer: UITapGestureRecognizer) {
-        reset(true)
+        updateCurrentValue(initialValue, animated: true, notify: true)
     }
     
     public func reset(notify: Bool = false) {
