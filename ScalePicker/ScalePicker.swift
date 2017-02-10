@@ -465,7 +465,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         if let view = leftView {
             if valuePosition == .Left {
-                view.center = CGPointMake(xOffset + sidePadding / 2, ((frame.size.height / 2) - view.frame.height / 4) + 5)
+                view.center = CGPointMake(xOffset + sidePadding / 2, ((frame.size.height / 2) + view.frame.height / 4))
             } else {
                 view.center = CGPointMake(xOffset + sidePadding / 2, picker.center.y + 5)
             }
@@ -606,7 +606,7 @@ public class ScalePicker: UIView, SlidePickerDelegate {
         
         if valuePosition == .Left {
             if let view = leftView {
-                valueLabel.frame = CGRectMake(view.center.x - signOffset - textWidth / 2, 5 + frame.size.height / 2, textWidth, 16)
+                valueLabel.frame = CGRectMake(view.center.x - signOffset - textWidth / 2, (frame.size.height / 2) - 20, textWidth, 16)
             } else {
                 valueLabel.frame = CGRectMake(sidePadding, 5, textWidth, frame.size.height)
                 valueLabel.center = CGPointMake(xOffset + sidePadding / 2, frame.size.height / 2 + 5)
