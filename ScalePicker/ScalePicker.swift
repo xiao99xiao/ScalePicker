@@ -13,90 +13,92 @@ public typealias ValueFormatter = (CGFloat) -> NSAttributedString
 public typealias ValueChangeHandler = (CGFloat) -> Void
 
 public enum ScalePickerValuePosition {
-    case top
-    case left
+    case Top
+    case Left
 }
 
 public protocol ScalePickerDelegate {
-    func didChangeScaleValue(_ picker: ScalePicker, value: CGFloat)
+    func didChangeScaleValue(picker: ScalePicker, value: CGFloat)
+    func didBeginChangingValue(picker: ScalePicker)
+    func didEndChangingValue(picker: ScalePicker)
 }
 
 @IBDesignable
-open class ScalePicker: UIView, SlidePickerDelegate {
+public class ScalePicker: UIView, SlidePickerDelegate {
     
-    open var delegate: ScalePickerDelegate?
+    public var delegate: ScalePickerDelegate?
     
-    open var valueChangeHandler: ValueChangeHandler = {(value: CGFloat) in
+    public var valueChangeHandler: ValueChangeHandler = {(value: CGFloat) in
     
     }
     
-    open var valuePosition = ScalePickerValuePosition.top {
+    public var valuePosition = ScalePickerValuePosition.Top {
         didSet {
             layoutSubviews()
         }
     }
     
     @IBInspectable
-    open var title: String = "" {
+    public var title: String = "" {
         didSet {
             titleLabel.text = title
         }
     }
     
     @IBInspectable
-    open var gradientMaskEnabled: Bool = false {
+    public var gradientMaskEnabled: Bool = false {
         didSet {
             picker.gradientMaskEnabled = gradientMaskEnabled
         }
     }
     
     @IBInspectable
-    open var invertValues: Bool = false {
+    public var invertValues: Bool = false {
         didSet {
             picker.invertValues = invertValues
         }
     }
     
     @IBInspectable
-    open var trackProgress: Bool = false {
+    public var trackProgress: Bool = false {
         didSet {
             progressView.alpha = trackProgress ? 1.0 : 0.0
         }
     }
     
     @IBInspectable
-    open var invertProgress: Bool = false {
+    public var invertProgress: Bool = false {
         didSet {
-            layoutProgressView(currentProgress)
+            layoutProgressView(progress: currentProgress)
         }
     }
     
     @IBInspectable
-    open var fillSides: Bool = false {
+    public var fillSides: Bool = false {
         didSet {
             picker.fillSides = fillSides
         }
     }
     
     @IBInspectable
-    open var elasticCurrentValue: Bool = false
+    public var elasticCurrentValue: Bool = false
 
     @IBInspectable
-    open var highlightCenterTick: Bool = true {
+    public var highlightCenterTick: Bool = true {
         didSet {
             picker.highlightCenterTick = highlightCenterTick
         }
     }
 
     @IBInspectable
-    open var allTicksWithSameSize: Bool = false {
+    public var allTicksWithSameSize: Bool = false {
         didSet {
             picker.allTicksWithSameSize = allTicksWithSameSize
         }
     }
     
     @IBInspectable
-    open var showCurrentValue: Bool = false {
+    public var showCurrentValue: Bool = false {
         didSet {
             valueLabel.alpha = showCurrentValue ? 1.0 : 0.0
             
@@ -106,14 +108,14 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var blockedUI: Bool = false {
+    public var blockedUI: Bool = false {
         didSet {
             picker.blockedUI = blockedUI
         }
     }
     
     @IBInspectable
-    open var numberOfTicksBetweenValues: UInt = 4 {
+    public var numberOfTicksBetweenValues: UInt = 4 {
         didSet {
             picker.numberOfTicksBetweenValues = numberOfTicksBetweenValues
             reset()
@@ -121,7 +123,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var minValue: CGFloat = -3.0 {
+    public var minValue: CGFloat = -3.0 {
         didSet {
             picker.minValue = minValue
             reset()
@@ -129,7 +131,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var maxValue: CGFloat = 3.0 {
+    public var maxValue: CGFloat = 3.0 {
         didSet {
             picker.maxValue = maxValue
             reset()
@@ -137,7 +139,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var spaceBetweenTicks: CGFloat = 10.0 {
+    public var spaceBetweenTicks: CGFloat = 10.0 {
         didSet {
             picker.spaceBetweenTicks = spaceBetweenTicks
             reset()
@@ -145,28 +147,28 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var centerViewWithLabelsYOffset: CGFloat = 15.0 {
+    public var centerViewWithLabelsYOffset: CGFloat = 15.0 {
         didSet {
             updateCenterViewOffset()
         }
     }
 
     @IBInspectable
-    open var centerViewWithoutLabelsYOffset: CGFloat = 15.0 {
+    public var centerViewWithoutLabelsYOffset: CGFloat = 15.0 {
         didSet {
             updateCenterViewOffset()
         }
     }
     
     @IBInspectable
-    open var pickerOffset: CGFloat = 0.0 {
+    public var pickerOffset: CGFloat = 0.0 {
         didSet {
             layoutSubviews()
         }
     }
     
     @IBInspectable
-    open var tickColor: UIColor = UIColor.white {
+    public var tickColor: UIColor = UIColor.white {
         didSet {
             picker.tickColor = tickColor
             centerImageView.image = centerArrowImage?.tintImage(tickColor)
@@ -175,24 +177,24 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
 
     @IBInspectable
-    open var progressColor: UIColor = UIColor.white {
+    public var progressColor: UIColor = UIColor.white {
         didSet {
             progressView.backgroundColor = progressColor
         }
     }
     
     @IBInspectable
-    open var progressViewSize: CGFloat = 3.0 {
+    public var progressViewSize: CGFloat = 3.0 {
         didSet {
             progressView.frame = CGRect(x: 0, y: 0, width: progressViewSize, height: progressViewSize)
             progressView.layer.cornerRadius = progressViewSize / 2
             
-            layoutProgressView(currentProgress)
+            layoutProgressView(progress: currentProgress)
         }
     }
     
     @IBInspectable
-    open var centerArrowImage: UIImage? {
+    public var centerArrowImage: UIImage? {
         didSet {
             centerImageView.image = centerArrowImage
             reset()
@@ -200,7 +202,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var showTickLabels: Bool = true {
+    public var showTickLabels: Bool = true {
         didSet {
             picker.showTickLabels = showTickLabels
             
@@ -211,55 +213,55 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     }
     
     @IBInspectable
-    open var snapEnabled: Bool = false {
+    public var snapEnabled: Bool = false {
         didSet {
             picker.snapEnabled = snapEnabled
         }
     }
     
     @IBInspectable
-    open var showPlusForPositiveValues: Bool = true {
+    public var showPlusForPositiveValues: Bool = true {
         didSet {
             picker.showPlusForPositiveValues = showPlusForPositiveValues
         }
     }
     
     @IBInspectable
-    open var fireValuesOnScrollEnabled: Bool = true {
+    public var fireValuesOnScrollEnabled: Bool = true {
         didSet {
             picker.fireValuesOnScrollEnabled = fireValuesOnScrollEnabled
         }
     }
     
     @IBInspectable
-    open var bounces: Bool = false {
+    public var bounces: Bool = false {
         didSet {
             picker.bounces = bounces
         }
     }
     
     @IBInspectable
-    open var sidePadding: CGFloat = 0.0 {
+    public var sidePadding: CGFloat = 0.0 {
         didSet {
             layoutSubviews()
         }
     }
     
-    open var currentTransform: CGAffineTransform = CGAffineTransform.identity {
+    public var currentTransform: CGAffineTransform = CGAffineTransform.identity {
         didSet {
             applyCurrentTransform()
         }
     }
     
-    open func applyCurrentTransform() {
+    public func applyCurrentTransform() {
         picker.currentTransform = currentTransform
         
-        if valuePosition == .left {
+        if valuePosition == .Left {
             valueLabel.transform = currentTransform
         }
     }
     
-    open var values: [CGFloat]? {
+    public var values: [CGFloat]? {
         didSet {
             guard let values = values, values.count > 1 else { return; }
             
@@ -271,14 +273,14 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
-    open var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
+    public var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
         let attrs = [NSForegroundColorAttributeName: UIColor.white,
                      NSFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
         
-        return NSMutableAttributedString(string: value.format(".2"), attributes: attrs)
+        return NSMutableAttributedString(string: value.format(f: ".2"), attributes: attrs)
     }
     
-    open var rightView: UIView? {
+    public var rightView: UIView? {
         willSet(newRightView) {
             if let view = rightView {
                 view.removeFromSuperview()
@@ -294,7 +296,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
 
-    open var leftView: UIView? {
+    public var leftView: UIView? {
         willSet(newLeftView) {
             if let view = leftView {
                 view.removeFromSuperview()
@@ -310,20 +312,22 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
-    fileprivate let centerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-    fileprivate let centerView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-    fileprivate let titleLabel = UILabel()
-    fileprivate let valueLabel = UILabel()
-    fileprivate var currentProgress: CGFloat = 0.5
-    fileprivate var progressView = UIView()
-    fileprivate var initialValue: CGFloat = 0.0
-    fileprivate var picker: SlidePicker!
-    fileprivate var shouldUpdatePicker = true
+    private let centerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+    private let centerView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+    private let titleLabel = UILabel()
+    private let valueLabel = UILabel()
+    private var currentProgress: CGFloat = 0.5
+    private var progressView = UIView()
+    private var initialValue: CGFloat = 0.0
+    private var picker: SlidePicker!
+    private var shouldUpdatePicker: Bool = true
+    private var notifyOnChanges: Bool = true
+    private var timer: Timer?
 
-    open var currentValue: CGFloat = 0.0 {
+    public var currentValue: CGFloat = 0.0 {
         didSet {
             if shouldUpdatePicker {
-                picker.scrollToValue(currentValue, animated: true)                
+                picker.scrollToValue(value: currentValue, animated: true)
             }
             
             valueLabel.attributedText = valueFormatter(currentValue)
@@ -332,17 +336,43 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
-    fileprivate func updateProgressAsync() {
-        let popTime = DispatchTime.now() + Double(Int64(1.0 * CGFloat(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+    public func updateCurrentValue(value: CGFloat, animated: Bool, notify: Bool = false) {
+        shouldUpdatePicker = false
+        notifyOnChanges = false
         
+        picker.scrollToValue(value: value, animated: animated, reload: false, complete: { [unowned self] in
+            self.currentValue = value
+            
+            if notify {
+                self.delegate?.didChangeScaleValue(picker: self, value: value)
+                self.valueChangeHandler(value)
+            }
+            
+            self.scheduleTimer()
+        })
+    }
+    
+    private func scheduleTimer() {
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ScalePicker.onTimer), userInfo: nil, repeats: false)
+    }
+    
+    internal func onTimer() {
+        self.shouldUpdatePicker = true
+        self.notifyOnChanges = true
+    }
+    
+    private func updateProgressAsync() {
+        let popTime = DispatchTime.now() + Double(Int64(1.0 * CGFloat(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+
         DispatchQueue.main.asyncAfter(deadline: popTime) {
             self.picker.updateCurrentProgress()
             
             if self.trackProgress {
                 UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
-                    
                     self.progressView.alpha = 1.0
-                    }, completion: nil)
+                }, completion: nil)
             }
         }
     }
@@ -359,7 +389,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         commonInit()
     }
     
-    open func commonInit() {
+    public func commonInit() {
         isUserInteractionEnabled = true
         
         titleLabel.textColor = tickColor
@@ -405,25 +435,25 @@ open class ScalePicker: UIView, SlidePickerDelegate {
 
         addSubview(progressView)
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(recognizer:)))
         
         tapGesture.numberOfTapsRequired = 2
         
         addGestureRecognizer(tapGesture)
     }
     
-    open override func prepareForInterfaceBuilder() {
+    public override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         
         layoutSubviews()
         reset()
     }
     
-    open override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         picker.frame = CGRect(x: sidePadding, y: pickerOffset,
-                                  width: frame.size.width - sidePadding * 2, height: frame.size.height)
+                              width: frame.size.width - sidePadding * 2, height: frame.size.height)
         picker.layoutSubviews()
         
         let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.05 : 0.0
@@ -433,8 +463,8 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
         
         if let view = leftView {
-            if valuePosition == .left {
-                view.center = CGPoint(x: xOffset + sidePadding / 2, y: ((frame.size.height / 2) - view.frame.height / 4) + 5)
+            if valuePosition == .Left {
+                view.center = CGPoint(x: xOffset + sidePadding / 2, y: ((frame.size.height / 2) + view.frame.height / 4))
             } else {
                 view.center = CGPoint(x: xOffset + sidePadding / 2, y: picker.center.y + 5)
             }
@@ -442,62 +472,66 @@ open class ScalePicker: UIView, SlidePickerDelegate {
 
         titleLabel.frame = CGRect(x: xOffset, y: 5, width: sidePadding, height: frame.size.height)
 
-        if valuePosition == .top {
+        if valuePosition == .Top {
             valueLabel.frame = CGRect(x: sidePadding, y: 5,
-                                          width: frame.width - sidePadding * 2, height: frame.size.height / 4.0)
+                                      width: frame.width - sidePadding * 2, height: frame.size.height / 4.0)
         } else {
             layoutValueLabel()
         }
     }
     
-    open func onDoubleTap(_ recognizer: UITapGestureRecognizer) {
-        reset()
+    public func onDoubleTap(recognizer: UITapGestureRecognizer) {
+        updateCurrentValue(value: initialValue, animated: true, notify: true)
     }
     
-    open func reset() {
-        currentValue = initialValue
-        delegate?.didChangeScaleValue(self, value: currentValue)
-        valueChangeHandler(currentValue)
-
-        progressView.alpha = 0.0
-        updateProgressAsync()
+    public func reset(notify: Bool = false) {
+        updateCurrentValue(value: initialValue, animated: false, notify: notify)
     }
     
-    open func increaseValue() {
+    public func increaseValue() {
         picker.increaseValue()
     }
     
-    open func decreaseValue() {
+    public func decreaseValue() {
         picker.decreaseValue()
     }
     
-    open func setInitialCurrentValue(_ value: CGFloat) {
+    public func setInitialCurrentValue(value: CGFloat) {
         shouldUpdatePicker = false
         
         currentValue = value
         initialValue = value
         
-        picker.scrollToValue(value, animated: false)
+        picker.scrollToValue(value: value, animated: false)
 
         shouldUpdatePicker = true
         
         progressView.alpha = 0.0
     }
     
-    open func didSelectValue(_ value: CGFloat) {
+    public func didSelectValue(value: CGFloat) {
         shouldUpdatePicker = false
         
-        if value != currentValue {
+        if notifyOnChanges && (value != currentValue) {
             currentValue = value
-            delegate?.didChangeScaleValue(self, value: value)
+            delegate?.didChangeScaleValue(picker: self, value: value)
             valueChangeHandler(value)
         }
         
         shouldUpdatePicker = true
     }
     
-    open func didChangeContentOffset(_ offset: CGFloat, progress: CGFloat) {
-        layoutProgressView(progress)
+    public func didBeginChangingValue() {
+        delegate?.didBeginChangingValue(picker: self)
+    }
+    
+    public func didEndChangingValue() {
+        delegate?.didEndChangingValue(picker: self)
+    }
+
+    
+    public func didChangeContentOffset(offset: CGFloat, progress: CGFloat) {
+        layoutProgressView(progress: progress)
 
         guard elasticCurrentValue else { return }
         
@@ -535,11 +569,11 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         valueLabel.transform = currentTransform.scaledBy(x: value, y: value)
     }
     
-    fileprivate func updateCenterViewOffset() {
+    private func updateCenterViewOffset() {
         picker.centerViewOffsetY = showTickLabels ? centerViewWithLabelsYOffset : centerViewWithoutLabelsYOffset
     }
     
-    fileprivate func layoutProgressView(_ progress: CGFloat) {
+    private func layoutProgressView(progress: CGFloat) {
         currentProgress = progress
         
         let updatedProgress = invertProgress ? 1.0 - progress : progress
@@ -548,19 +582,19 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         let scaledValue = progressWidth * updatedProgress
         var yOffset = pickerOffset + 4 + frame.size.height / 3
 
-        if title.isEmpty && valuePosition == .left  {
+        if title.isEmpty && valuePosition == .Left  {
             yOffset -= 6
         }
         
         progressView.center = CGPoint(x: xOffset + scaledValue, y: yOffset)
     }
     
-    fileprivate func layoutValueLabel() {
+    private func layoutValueLabel() {
         let text = valueLabel.attributedText
         
         guard let textValue = text else { return }
 
-        let textWidth = valueWidth(textValue)
+        let textWidth = valueWidth(text: textValue)
         var signOffset: CGFloat = 0
         
         if textValue.string.contains("+") || textValue.string.contains("-") {
@@ -569,9 +603,9 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         
         let xOffset = gradientMaskEnabled ? picker.frame.size.width * 0.05 : 0.0
         
-        if valuePosition == .left {
+        if valuePosition == .Left {
             if let view = leftView {
-                valueLabel.frame = CGRect(x: view.center.x - signOffset - textWidth / 2, y: 5 + frame.size.height / 2, width: textWidth, height: 16)
+                valueLabel.frame = CGRect(x: view.center.x - signOffset - textWidth / 2, y: (frame.size.height / 2) - 20, width: textWidth, height: 16)
             } else {
                 valueLabel.frame = CGRect(x: sidePadding, y: 5, width: textWidth, height: frame.size.height)
                 valueLabel.center = CGPoint(x: xOffset + sidePadding / 2, y: frame.size.height / 2 + 5)
@@ -582,7 +616,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         }
     }
     
-    fileprivate func valueWidth(_ text: NSAttributedString) -> CGFloat {
+    private func valueWidth(text: NSAttributedString) -> CGFloat {
         let rect = text.boundingRect(with: CGSize(width: 1024, height: frame.size.width), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil)
         
         return rect.width + 10
@@ -590,19 +624,19 @@ open class ScalePicker: UIView, SlidePickerDelegate {
 }
 
 private extension Double {
-    func format(_ f: String) -> String {
+    func format(f: String) -> String {
         return String(format: "%\(f)f", self)
     }
 }
 
 private extension Float {
-    func format(_ f: String) -> String {
+    func format(f: String) -> String {
         return String(format: "%\(f)f", self)
     }
 }
 
 private extension CGFloat {
-    func format(_ f: String) -> String {
+    func format(f: String) -> String {
         return String(format: "%\(f)f", self)
     }
 }
