@@ -8,24 +8,23 @@
 
 import UIKit
 import XLForm
-import ScalePicker
 
 class ViewController: XLFormViewController, ScalePickerDelegate {
     typealias FormButtonHandler = () -> Void
 
-    private let scaleView = ScalePicker(frame: CGRectMake(0, 0, Utils.ScreenWidth, 60))
+    private let scaleView = ScalePicker(frame: CGRect(x: 0, y: 0, width: Utils.ScreenWidth, height: 60))
     private let rightButton = UIImageView(image: UIImage(named: "speedAuto"))
     private let leftButton = UIImageView(image: UIImage(named: "speedManual"))
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let headerView = UIView(frame: CGRectMake(0, 0, Utils.ScreenWidth , 70))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: Utils.ScreenWidth, height: 70))
         
-        headerView.userInteractionEnabled = true
+        headerView.isUserInteractionEnabled = true
         headerView.backgroundColor = Utils.BackgroundColor
                 
-        scaleView.center = CGPointMake(headerView.frame.size.width / 2, headerView.frame.size.height / 2)
+        scaleView.center = CGPoint(x: headerView.frame.size.width / 2, y: headerView.frame.size.height / 2)
         scaleView.minValue = -3.0
         scaleView.maxValue = 3.0
         scaleView.numberOfTicksBetweenValues = 2
@@ -34,7 +33,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.delegate = self
         scaleView.snapEnabled = true
         scaleView.bounces = true
-        scaleView.tickColor = UIColor.whiteColor()
+        scaleView.tickColor = UIColor.white
         scaleView.centerArrowImage = UIImage(named: "arrowPointer")
         scaleView.gradientMaskEnabled = true
         scaleView.blockedUI = false
@@ -44,18 +43,11 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.trackProgress = true
         scaleView.invertProgress = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
-            let attrs = [NSForegroundColorAttributeName: UIColor.whiteColor(),
-                         NSFontAttributeName: UIFont.systemFontOfSize(12.0)]
+            let attrs = [NSAttributedStringKey.foregroundColor: UIColor.white,
+                         NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]
             
-            let text = value.format(".2") + " auto"
+            let text = value.format(f: ".2") + " auto"
             let attrText = NSMutableAttributedString(string: text, attributes: attrs)
-
-            if let range = text.rangeOfString("auto") {
-                let rangeValue = text.NSRangeFromRange(range)
-                
-                attrText.addAttribute(NSForegroundColorAttributeName, value:UIColor.orangeColor(), range:rangeValue)
-            }
-            
             return attrText
         }
         
@@ -64,7 +56,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         // Optionally you can set array of values for scale
 //        scaleView.values = [32, 40, 50, 64, 80, 100, 125, 160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250, 1600]
 
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * CGFloat(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.scaleView.setInitialCurrentValue(0)
         }
         
@@ -78,34 +70,35 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
     func initializeForm() {
         let form = XLFormDescriptor(title: "Scale picker")
         
-        form.rowNavigationOptions = XLFormRowNavigationOptions.Enabled
+        form.rowNavigationOptions = XLFormRowNavigationOptions.enabled
         
-        var section = XLFormSectionDescriptor.formSectionWithTitle("Actions")
+        var section = XLFormSectionDescriptor.formSection(withTitle: "Actions")
         
         form.addFormSection(section)
         
-        createButtonRow("increaseValue", title: "Increase value", section: section) { [unowned self]() -> Void in
+        let _ = createButtonRow(tag: "increaseValue", title: "Increase value", section: section) { [unowned self]() -> Void in
             self.scaleView.increaseValue()
         }
         
-        createButtonRow("decreaseValue", title: "Decrease value", section: section) { [unowned self]() -> Void in
+        let _ = createButtonRow(tag: "decreaseValue", title: "Decrease value", section: section) { [unowned self]() -> Void in
             self.scaleView.decreaseValue()
         }
         
-        createButtonRow("resetValue", title: "Reset value", section: section) { [unowned self]() -> Void in
+        let _ = createButtonRow(tag: "resetValue", title: "Reset value", section: section) { [unowned self]() -> Void in
             self.scaleView.reset()
         }
         
         
-        createButtonRow("setValue", title: "Set value to 0 animated", section: section) { [unowned self]() -> Void in
-            self.scaleView.updateCurrentValue(0, animated: true, notify: true)
+        let _ = createButtonRow(tag: "setValue", title: "Set value to 0 animated", section: section) { [unowned self]() -> Void in
+//            self.scaleView.up
+//            self.scaleView.elasticCurrentValue(value: 0, animated: true, notify: true)
         }
         
-        createButtonRow("setValue", title: "Set value to 0 silent", section: section) { [unowned self]() -> Void in
-            self.scaleView.updateCurrentValue(0, animated: false, notify: false)
+        let _ = createButtonRow(tag: "setValue", title: "Set value to 0 silent", section: section) { [unowned self]() -> Void in
+//            self.scaleView.updateCurrentValue(value: 0, animated: false, notify: false)
         }
         
-        section = XLFormSectionDescriptor.formSectionWithTitle("Properties")
+        section = XLFormSectionDescriptor.formSection(withTitle: "Properties")
         
         form.addFormSection(section)
         
@@ -224,11 +217,11 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
             
             if let updatedValue = updatedValue {
                 if updatedValue == "White" {
-                    self.scaleView.tickColor = UIColor.whiteColor()
+                    self.scaleView.tickColor = UIColor.white
                 } else if updatedValue == "Red" {
-                    self.scaleView.tickColor = UIColor.redColor()
+                    self.scaleView.tickColor = UIColor.red
                 } else if updatedValue == "Green" {
-                    self.scaleView.tickColor = UIColor.greenColor()
+                    self.scaleView.tickColor = UIColor.green
                 }
             }
         }
@@ -379,7 +372,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
             let updatedValue = newValue as? String
             
             if let updatedValue = updatedValue {
-                self.scaleView.valuePosition = updatedValue == "Top" ? .Top : .Left
+//                self.scaleView.valuePosition = updatedValue == "Top" ? .Top : .Left
             }
         }
         
@@ -470,11 +463,11 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
             
             if let updatedValue = updatedValue {
                 if updatedValue == "White" {
-                    self.scaleView.progressColor = UIColor.whiteColor()
+                    self.scaleView.progressColor = UIColor.white
                 } else if updatedValue == "Red" {
-                    self.scaleView.progressColor = UIColor.redColor()
+                    self.scaleView.progressColor = UIColor.red
                 } else if updatedValue == "Yellow" {
-                    self.scaleView.progressColor = UIColor.yellowColor()
+                    self.scaleView.progressColor = UIColor.yellow
                 }
             }
         }
@@ -484,7 +477,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         self.form = form
     }
     
-    func createButtonRow(tag:String, title:String, section:XLFormSectionDescriptor, handler: FormButtonHandler) -> XLFormRowDescriptor {
+    func createButtonRow(tag:String, title:String, section:XLFormSectionDescriptor, handler: @escaping FormButtonHandler) -> XLFormRowDescriptor {
         let row = XLFormRowDescriptor(tag: tag, rowType:XLFormRowDescriptorTypeButton, title:title)
         
         row.action.formBlock = { [unowned self] (sender: XLFormRowDescriptor!) -> Void in
@@ -498,7 +491,7 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         return row
     }
 
-    func didChangeScaleValue(picker: ScalePicker, value: CGFloat) {
+    func didChangeScaleValue(_ picker: ScalePicker, value: CGFloat) {
         print("Changed scale picker value: \(value)")
     }
     
@@ -510,9 +503,6 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         print("End changing scale picker value")
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
 }
 
 private extension CGFloat {
@@ -520,13 +510,3 @@ private extension CGFloat {
         return String(format: "%\(f)f", self)
     }
 }
-
-private extension String {
-    func NSRangeFromRange(range : Range<String.Index>) -> NSRange {
-        let utf16view = self.utf16
-        let from = String.UTF16View.Index(range.startIndex, within: utf16view)
-        let to = String.UTF16View.Index(range.endIndex, within: utf16view)
-        return NSMakeRange(utf16view.startIndex.distanceTo(from), from.distanceTo(to))
-    }
-}
-
