@@ -2,7 +2,7 @@
     <img src="https://travis-ci.org/kronik/ScalePicker.svg?branch=master" />
     <img src="https://img.shields.io/badge/platform-iOS%208%2B-blue.svg?style=flat" alt="Platform: iOS 8+" />
     <img src="https://img.shields.io/cocoapods/v/ScalePicker.svg?style=flat" />
-    <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat" alt="Language: Swift 2.2" /></a>
+    <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat" alt="Language: Swift 2.2" /></a>
     <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" /></a>
     <img src="http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat" alt="License: MIT" />
     <a href="https://twitter.com/dklimkin"><img src="http://img.shields.io/badge/contact-@dklimkin-blue.svg?style=flat"/></a>

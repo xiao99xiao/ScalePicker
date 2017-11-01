@@ -9,6 +9,16 @@
 import Foundation
 import UIKit
 
-public class SlidePickerFlowLayout: UICollectionViewFlowLayout {
+open class SlidePickerFlowLayout: UICollectionViewFlowLayout {
+        
+    func update(withDirection scrollDirection: UICollectionViewScrollDirection) {
+        self.scrollDirection = scrollDirection
+        self.minimumInteritemSpacing = 0.0
+        self.minimumLineSpacing = 0.0
+    }
+
+    open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        return true
+    }
     
 }
