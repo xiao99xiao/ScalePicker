@@ -280,8 +280,8 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     open var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
         
-        let attrs = [NSAttributedStringKey.foregroundColor: UIColor.white,
-                     NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15.0)]
+        let attrs = [NSForegroundColorAttributeName: UIColor.white,
+                     NSFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
         
         return NSMutableAttributedString(string: value.format(".2"), attributes: attrs)
     }

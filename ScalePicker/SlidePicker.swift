@@ -610,7 +610,7 @@ open class SlidePickerCell: UICollectionViewCell {
         let font = UIFont.systemFont(ofSize: 12.0)
         
         let rect = textString.boundingRect(with: maximumTextSize, options: .usesLineFragmentOrigin,
-                                           attributes: [NSAttributedStringKey.font: font], context: nil)
+                                           attributes: [NSFontAttributeName: font], context: nil)
 
         return (rect.width / 2) + 1
     }()
