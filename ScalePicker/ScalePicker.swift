@@ -27,7 +27,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     open var delegate: ScalePickerDelegate?
     
     open var valueChangeHandler: ValueChangeHandler = {(value: CGFloat) in
-    
+        
     }
     
     open var valuePosition = ScalePickerValuePosition.top {
@@ -80,14 +80,14 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     @IBInspectable
     open var elasticCurrentValue: Bool = false
-
+    
     @IBInspectable
     open var highlightCenterTick: Bool = true {
         didSet {
             picker.highlightCenterTick = highlightCenterTick
         }
     }
-
+    
     @IBInspectable
     open var allTicksWithSameSize: Bool = false {
         didSet {
@@ -150,7 +150,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
             updateCenterViewOffset()
         }
     }
-
+    
     @IBInspectable
     open var centerViewWithoutLabelsYOffset: CGFloat = 15.0 {
         didSet {
@@ -173,7 +173,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
             titleLabel.textColor = tickColor
         }
     }
-
+    
     @IBInspectable
     open var progressColor: UIColor = UIColor.white {
         didSet {
@@ -251,7 +251,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
             picker.isVertical = isVertical
         }
     }
-
+    
     open var currentTransform: CGAffineTransform = CGAffineTransform.identity {
         didSet {
             applyCurrentTransform()
@@ -280,10 +280,10 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     open var valueFormatter: ValueFormatter = {(value: CGFloat) -> NSAttributedString in
         
-        let attrs = [NSForegroundColorAttributeName: UIColor.white,
-                     NSFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
+        let attrs = [kCTForegroundColorAttributeName: UIColor.white,
+                     kCTFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
         
-        return NSMutableAttributedString(string: value.format(".2"), attributes: attrs)
+        return NSMutableAttributedString(string: value.format(".2"), attributes: attrs as [NSAttributedStringKey : Any])
     }
     
     open var rightView: UIView? {
@@ -297,11 +297,11 @@ open class ScalePicker: UIView, SlidePickerDelegate {
             if let view = rightView {
                 addSubview(view)
             }
-
+            
             layoutSubviews()
         }
     }
-
+    
     open var leftView: UIView? {
         willSet(newLeftView) {
             if let view = leftView {
@@ -327,16 +327,20 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     fileprivate var initialValue: CGFloat = 0.0
     fileprivate var picker: SlidePicker!
     fileprivate var shouldUpdatePicker = true
-
+    
     open var currentValue: CGFloat = 0.0 {
         didSet {
+            print("1")
             if shouldUpdatePicker {
-                picker.scrollToValue(currentValue, animated: true)                
+                picker.scrollToValue(currentValue, animated: true)
             }
-            
+            print("2")
             valueLabel.attributedText = valueFormatter(currentValue)
+            print("3")
             layoutValueLabel()
+            print("4")
             updateProgressAsync()
+            print("5")
         }
     }
     
@@ -350,7 +354,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
                 UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: UIViewAnimationOptions(), animations: { () -> Void in
                     
                     self.progressView.alpha = 1.0
-                    }, completion: nil)
+                }, completion: nil)
             }
         }
     }
@@ -414,9 +418,9 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         progressView.alpha = 0.0
         progressView.layer.masksToBounds = true
         progressView.layer.cornerRadius = progressViewSize / 2
-
+        
         addSubview(progressView)
-
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ScalePicker.onDoubleTap(_:)))
         
         tapGesture.numberOfTapsRequired = 2
@@ -433,7 +437,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         if isVertical{
         }else{
             picker.frame = CGRect(x: sidePadding, y: pickerOffset, width: frame.size.width - sidePadding * 2, height: frame.size.height)
@@ -455,20 +459,24 @@ open class ScalePicker: UIView, SlidePickerDelegate {
             
             titleLabel.frame = CGRect(x: xOffset, y: 5, width: sidePadding, height: frame.size.height)
         }
-
-
+        
+        
         if valuePosition == .top {
             valueLabel.frame = CGRect(x: sidePadding, y: 5,
-                                          width: frame.width - sidePadding * 2, height: frame.size.height / 4.0)
+                                      width: frame.width - sidePadding * 2, height: frame.size.height / 4.0)
         } else {
             layoutValueLabel()
         }
         
-        if isVertical{
-            picker.frame = CGRect(x: sidePadding, y: valueLabel.frame.size.height, width: frame.size.width - sidePadding * 2, height: frame.size.height - valueLabel.frame.size.height)
+        if isVertical {
+            
+            let originY = showCurrentValue ? valueLabel.frame.size.height : 0.0
+            let height = showCurrentValue ? frame.size.height - valueLabel.frame.size.height : (picker.superview?.frame.size.height ?? (self.frame.size.height + valueLabel.frame.size.height))
+            
+            picker.frame = CGRect(x: sidePadding, y: originY, width: frame.size.width - sidePadding * 2, height: height)
             picker.layoutSubviews()
         }
-
+        
     }
     
     @objc open func onDoubleTap(_ recognizer: UITapGestureRecognizer) {
@@ -479,7 +487,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         currentValue = initialValue
         delegate?.didChangeScaleValue(self, value: currentValue)
         valueChangeHandler(currentValue)
-
+        
         progressView.alpha = 0.0
         updateProgressAsync()
     }
@@ -499,7 +507,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         initialValue = value
         
         picker.scrollToValue(value, animated: false)
-
+        
         shouldUpdatePicker = true
         
         progressView.alpha = 0.0
@@ -519,7 +527,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     open func didChangeContentOffset(_ offset: CGFloat, progress: CGFloat) {
         layoutProgressView(progress)
-
+        
         guard elasticCurrentValue else { return }
         
         let minScale: CGFloat    = 0.0
@@ -528,13 +536,13 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         var offsetShift: CGFloat = 0.0
         var scaleShift: CGFloat  = 1.0
         var offsetValue          = offset
-
+        
         if offset < 0 {
             scaleShift = -maxScale
             offsetShift = 50.0
             offsetValue = offset + offsetShift
         }
-
+        
         var value = min(maxScale, max(minScale, offsetValue * (maxScale / maxOffset)))
         
         value += scaleShift
@@ -552,7 +560,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
                 value = 1 - (value - scaleShift)
             }
         }
-                
+        
         valueLabel.transform = currentTransform.scaledBy(x: value, y: value)
     }
     
@@ -568,7 +576,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         let progressWidth = gradientMaskEnabled ? picker.frame.size.width * 0.8 : picker.frame.size.width
         let scaledValue = progressWidth * updatedProgress
         var yOffset = pickerOffset + 4 + frame.size.height / 3
-
+        
         if title.isEmpty && valuePosition == .left  {
             yOffset -= 6
         }
@@ -580,7 +588,7 @@ open class ScalePicker: UIView, SlidePickerDelegate {
         let text = valueLabel.attributedText
         
         guard let textValue = text else { return }
-
+        
         let textWidth = valueWidth(textValue)
         var signOffset: CGFloat = 0
         
