@@ -330,17 +330,16 @@ open class ScalePicker: UIView, SlidePickerDelegate {
     
     open var currentValue: CGFloat = 0.0 {
         didSet {
-            print("1")
+            
             if shouldUpdatePicker {
                 picker.scrollToValue(currentValue, animated: true)
             }
-            print("2")
+            
             valueLabel.attributedText = valueFormatter(currentValue)
-            print("3")
+            
             layoutValueLabel()
-            print("4")
             updateProgressAsync()
-            print("5")
+            
         }
     }
     
