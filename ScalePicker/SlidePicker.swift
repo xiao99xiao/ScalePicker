@@ -17,7 +17,7 @@ public protocol SlidePickerDelegate {
 @IBDesignable
 open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     open var delegate: SlidePickerDelegate?
-
+    
     @IBInspectable
     open var gradientMaskEnabled: Bool = false {
         didSet {
@@ -82,6 +82,13 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     }
     
     @IBInspectable
+    open var showTicks: Bool = true {
+        didSet {
+            requestCollectionViewReloading()
+        }
+    }
+    
+    @IBInspectable
     open var highlightCenterTick: Bool = true {
         didSet {
             requestCollectionViewReloading()
@@ -108,9 +115,9 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
             layoutSubviews()
         }
     }
-
+    
     fileprivate let cellId = "collectionViewCellId"
-
+    
     fileprivate var flowLayout: SlidePickerFlowLayout!
     fileprivate var collectionView: UICollectionView!
     fileprivate var tickValue: CGFloat = 1.0
@@ -120,7 +127,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     fileprivate var maskRightLayer: CAGradientLayer!
     fileprivate var uiBlockView: UIView!
     fileprivate var reloadTimer: Timer?
-
+    
     open var centerView: UIView? {
         didSet {
             if let centerView = centerView {
@@ -133,14 +140,21 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     open var values: [CGFloat]? {
         didSet {
-            guard let values = values , values.count > 1 else { return; }
+            guard let values = values, values.count > 1 else { return; }
             
             updateSectionsCount()
-
+            
             requestCollectionViewReloading()
         }
     }
-
+    
+    open var valueLabels: [String]? {
+        didSet {
+            guard let valueLabels = valueLabels, valueLabels.count > 1 else { return; }
+            requestCollectionViewReloading()
+        }
+    }
+    
     @IBInspectable
     open var tickColor: UIColor = UIColor.white {
         didSet {
@@ -167,14 +181,14 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
             updateSectionsCount()
         }
     }
-
+    
     @IBInspectable
     open var isVertical: Bool = false {
         didSet {
             updateCollectionLayout()
         }
     }
-
+    
     fileprivate func updateSectionsCount() {
         guard minValue < maxValue else {
             return
@@ -228,7 +242,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     open func commonInit() {
         isUserInteractionEnabled = true
-
+        
         flowLayout = SlidePickerFlowLayout()
         flowLayout.update(withDirection: self.isVertical ? UICollectionViewScrollDirection.vertical : UICollectionViewScrollDirection.horizontal)
         
@@ -241,7 +255,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         collectionView.bounces = false
         collectionView.allowsSelection = false
         collectionView.delaysContentTouches = true
-
+        
         collectionView.register(SlidePickerCell.self, forCellWithReuseIdentifier: cellId)
         updateCollectionLayout()
         
@@ -255,17 +269,17 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         maskLeftLayer = CAGradientLayer()
         maskLeftLayer.frame = maskLayer.bounds
         maskLeftLayer.colors = [UIColor.black.withAlphaComponent(0.0).cgColor, UIColor.black.cgColor]
-
+        
         maskRightLayer = CAGradientLayer()
         maskRightLayer.frame = maskLayer.bounds
         maskRightLayer.colors = [UIColor.black.cgColor, UIColor.black.withAlphaComponent(0.0).cgColor]
-
+        
         maskLayer.addSublayer(maskLeftLayer)
         maskLayer.addSublayer(maskRightLayer)
         
         uiBlockView = UIView(frame: self.bounds)
     }
-   
+    
     func updateCollectionLayout(){
         flowLayout = SlidePickerFlowLayout()
         flowLayout.update(withDirection: self.isVertical ? UICollectionViewScrollDirection.vertical : UICollectionViewScrollDirection.horizontal)
@@ -280,7 +294,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     @objc func reloadCollectionView() {
         reloadTimer?.invalidate()
-
+        
         collectionView.reloadData()
     }
     
@@ -346,7 +360,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         if indexPath.section == 0 || indexPath.section == (sectionsCount - 1) {
             if fillSides {
                 let sideItems = (Int(frame.size.width / spaceBetweenTicks) + 2) / 2
-
+                
                 if (indexPath.section == 0 && indexPath.row == 0) ||
                     (indexPath.section == sectionsCount - 1 && indexPath.row == sideItems - 1)  {
                     
@@ -361,7 +375,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
                     }else{
                         return regularCellSize
                     }
-
+                    
                 }
             } else {
                 if isVertical{
@@ -403,7 +417,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
             }
         }
     }
-
+    
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SlidePickerCell
@@ -411,6 +425,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         cell.indexPath = indexPath
         cell.tickColor = tickColor
         cell.showTickLabels = showTickLabels
+        cell.showTicks = showTicks
         cell.highlightTick = false
         cell.currentTransform = currentTransform
         cell.showPlusForPositiveValues = showPlusForPositiveValues
@@ -427,10 +442,10 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
                 let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
                 let currentValue = values[index]
                 
-                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .bigStroke : .smallStroke)
+                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .bigStroke : .smallStroke, stringValue: self.valueLabels?[Int(currentValue)])
             } else {
                 let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
-
+                
                 if indexPath.row == 0 {
                     if highlightCenterTick {
                         cell.highlightTick = (currentValue == ((maxValue - minValue) * 0.5 + minValue))
@@ -438,11 +453,11 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
                         cell.highlightTick = false
                     }
                     
-                    cell.updateValue(currentValue, type: .bigStroke)
+                    cell.updateValue(currentValue, type: .bigStroke, stringValue: self.valueLabels?[Int(currentValue)])
                 } else {
                     let value = invertValues ? currentValue - tickValue * CGFloat(indexPath.row) : currentValue + tickValue * CGFloat(indexPath.row)
                     cell.showTickLabels = allTicksWithSameSize ? false : showTickLabels
-                    cell.updateValue(value, type: allTicksWithSameSize ? .bigStroke : .smallStroke)
+                    cell.updateValue(value, type: allTicksWithSameSize ? .bigStroke : .smallStroke, stringValue: self.valueLabels?[Int(value)])
                 }
             }
         }
@@ -499,7 +514,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
             
             let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
             let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
-
+            
             indexPath = IndexPath(row: row, section: section + 1)
             
             let cell = collectionView(collectionView, cellForItemAt: indexPath!) as? SlidePickerCell
@@ -544,14 +559,14 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     open func increaseValue() {
         let point = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x + spaceBetweenTicks * 2 / 3,
-                                y: collectionView.center.y + collectionView.contentOffset.y)
+                            y: collectionView.center.y + collectionView.contentOffset.y)
         
         scrollToNearestCellAtPoint(point)
     }
     
     open func decreaseValue() {
         let point = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x - spaceBetweenTicks * 2 / 3,
-            y: collectionView.center.y + collectionView.contentOffset.y)
+                            y: collectionView.center.y + collectionView.contentOffset.y)
         
         scrollToNearestCellAtPoint(point)
     }
@@ -559,7 +574,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     fileprivate func updateSelectedValue(_ tryToSnap: Bool) {
         if snapEnabled {
             let initialPinchPoint = CGPoint(x: collectionView.center.x + collectionView.contentOffset.x,
-                                                y: collectionView.center.y + collectionView.contentOffset.y)
+                                            y: collectionView.center.y + collectionView.contentOffset.y)
             
             scrollToNearestCellAtPoint(initialPinchPoint, skipScroll: fireValuesOnScrollEnabled && !tryToSnap)
         } else {
@@ -607,21 +622,22 @@ open class SlidePickerCell: UICollectionViewCell {
         let sign = "-"
         let maximumTextSize = CGSize(width: 100, height: 100)
         let textString = sign as NSString
-        let font = UIFont.systemFont(ofSize: 12.0)
+        let font = UIFont.systemFont(ofSize: 16.0)
         
         let rect = textString.boundingRect(with: maximumTextSize, options: .usesLineFragmentOrigin,
                                            attributes: [NSFontAttributeName: font], context: nil)
-
+        
         return (rect.width / 2) + 1
     }()
     
     open static let strokeWidth: CGFloat = 1.5
     
     open var showTickLabels = true
+    open var showTicks = true
     open var showPlusForPositiveValues = true
     open var highlightTick = false
     open var isVertical = false
-
+    
     fileprivate var type = SlidePickerCellType.empty
     
     open var value: CGFloat = 0.0 {
@@ -633,6 +649,12 @@ open class SlidePickerCell: UICollectionViewCell {
             } else {
                 valueLabel.text = strValue
             }
+        }
+    }
+    
+    open var stringValue: String? {
+        didSet {
+            valueLabel.text = stringValue
         }
     }
     
@@ -661,7 +683,7 @@ open class SlidePickerCell: UICollectionViewCell {
         super.init(frame: frame)
         commonInit()
     }
-
+    
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
@@ -676,9 +698,12 @@ open class SlidePickerCell: UICollectionViewCell {
         indexPath = nil
     }
     
-    open func updateValue(_ value: CGFloat, type: SlidePickerCellType) {
+    open func updateValue(_ value: CGFloat, type: SlidePickerCellType, stringValue: String? = nil) {
         self.value = value
         self.type = type
+        if let strValue = stringValue {
+            self.stringValue = strValue
+        }
         
         layoutSubviews()
     }
@@ -690,10 +715,10 @@ open class SlidePickerCell: UICollectionViewCell {
         strokeView.layer.cornerRadius = strokeWidth / 2
         
         valueLabel.textAlignment = .center
-        valueLabel.font = UIFont.systemFont(ofSize: 12.0)
+        valueLabel.font = UIFont.systemFont(ofSize: 18.0)
         valueLabel.textColor = UIColor.white
         valueLabel.alpha = 0.0
-
+        
         contentView.addSubview(strokeView)
         contentView.addSubview(valueLabel)
     }
@@ -705,58 +730,58 @@ open class SlidePickerCell: UICollectionViewCell {
         let xShift: CGFloat = (showPlusForPositiveValues && value > 0.0001) || value < -0.0001 ? SlidePickerCell.signWidth : 0.0
         
         switch type {
-            case .empty:
-                strokeView.alpha = 0.0
-                valueLabel.alpha = 0.0
-                break
-                
-            case .bigStroke:
-                let widthAddition: CGFloat = highlightTick ? 0.5 : 0.0
-
-                strokeView.alpha = 1.0
-                valueLabel.alpha = showTickLabels ? 1.0 : 0.0
-                
-                if showTickLabels {
-                    valueLabel.frame = CGRect(x: -5 - xShift, y: 0, width: frame.size.width + 10, height: height / 3)
-                } else {
-                    valueLabel.frame = CGRect.zero
-                }
-                
-
-                if isVertical{
-                    strokeView.frame = CGRect(x: bigStrokePaddind, y: (frame.size.height - strokeWidth + widthAddition * 2)/2, width: frame.size.width - bigStrokePaddind*2, height: strokeWidth + widthAddition * 2)
-                    strokeView.layer.cornerRadius = strokeWidth + widthAddition * 2
-                }else{
-                    strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
-                                              y: (height / 3) + bigStrokePaddind, width: strokeWidth + widthAddition * 2,
-                                              height: (height / 2) - (bigStrokePaddind * 2))
-                    strokeView.layer.cornerRadius = strokeWidth + widthAddition * 2
-                }
-                
-                break
-
-            case .smallStroke:
-                strokeView.alpha = 1.0
-                valueLabel.alpha = 0.0
-                
-                if showTickLabels {
-                    valueLabel.frame = CGRect(x: -xShift, y: 0, width: frame.size.width, height: height / 2)
-                } else {
-                    valueLabel.frame = CGRect.zero
-                }
-                
-                if isVertical{
-                    strokeView.frame = CGRect(x: smallStrokePaddind*2, y: (frame.size.height - strokeWidth)/2, width: frame.size.width - smallStrokePaddind*4, height: strokeWidth)
-                    strokeView.layer.cornerRadius = strokeWidth
-                }else{
-                    strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2),
-                                              y: (height / 3) + smallStrokePaddind, width: strokeWidth,
-                                              height: (height / 2) - (smallStrokePaddind * 2))
-                    strokeView.layer.cornerRadius = strokeView.frame.width
-                }
-
-                
-                break
+        case .empty:
+            strokeView.alpha = 0.0
+            valueLabel.alpha = 0.0
+            break
+            
+        case .bigStroke:
+            let widthAddition: CGFloat = highlightTick ? 0.5 : 0.0
+            
+            strokeView.alpha = showTicks ? 1.0 : 0.0
+            valueLabel.alpha = showTickLabels ? 1.0 : 0.0
+            
+            if showTickLabels {
+                valueLabel.frame = CGRect(x: -25 - xShift, y: showTicks ? 0 : 15, width: frame.size.width + 50, height: height / 3)
+            } else {
+                valueLabel.frame = CGRect.zero
+            }
+            
+            
+            if isVertical{
+                strokeView.frame = CGRect(x: bigStrokePaddind, y: (frame.size.height - strokeWidth + widthAddition * 2)/2, width: frame.size.width - bigStrokePaddind*2, height: strokeWidth + widthAddition * 2)
+                strokeView.layer.cornerRadius = strokeWidth + widthAddition * 2
+            }else{
+                strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2) - widthAddition,
+                                          y: (height / 3) + bigStrokePaddind, width: strokeWidth + widthAddition * 2,
+                                          height: (height / 2) - (bigStrokePaddind * 2))
+                strokeView.layer.cornerRadius = strokeWidth + widthAddition * 2
+            }
+            
+            break
+            
+        case .smallStroke:
+            strokeView.alpha = 1.0
+            valueLabel.alpha = 0.0
+            
+            if showTickLabels {
+                valueLabel.frame = CGRect(x: -xShift, y: 0, width: frame.size.width, height: height / 2)
+            } else {
+                valueLabel.frame = CGRect.zero
+            }
+            
+            if isVertical{
+                strokeView.frame = CGRect(x: smallStrokePaddind*2, y: (frame.size.height - strokeWidth)/2, width: frame.size.width - smallStrokePaddind*4, height: strokeWidth)
+                strokeView.layer.cornerRadius = strokeWidth
+            }else{
+                strokeView.frame = CGRect(x: (frame.size.width / 2) - (strokeWidth / 2),
+                                          y: (height / 3) + smallStrokePaddind, width: strokeWidth,
+                                          height: (height / 2) - (smallStrokePaddind * 2))
+                strokeView.layer.cornerRadius = strokeView.frame.width
+            }
+            
+            
+            break
         }
     }
 }
@@ -788,3 +813,4 @@ internal extension UIImage {
         return coloredImage!.withRenderingMode(.alwaysOriginal)
     }
 }
+
