@@ -43,8 +43,8 @@ class ViewController: XLFormViewController, ScalePickerDelegate {
         scaleView.trackProgress = true
         scaleView.invertProgress = true
         scaleView.valueFormatter = {(value: CGFloat) -> NSAttributedString in
-            let attrs = [NSAttributedStringKey.foregroundColor: UIColor.white,
-                         NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0)]
+            let attrs = [NSAttributedString.Key.foregroundColor: UIColor.white,
+                         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)]
             
             let text = value.format(f: ".2") + " auto"
             let attrText = NSMutableAttributedString(string: text, attributes: attrs)

@@ -11,7 +11,7 @@ import UIKit
 
 open class SlidePickerFlowLayout: UICollectionViewFlowLayout {
         
-    func update(withDirection scrollDirection: UICollectionViewScrollDirection) {
+    func update(withDirection scrollDirection: UICollectionView.ScrollDirection) {
         self.scrollDirection = scrollDirection
         self.minimumInteritemSpacing = 0.0
         self.minimumLineSpacing = 0.0

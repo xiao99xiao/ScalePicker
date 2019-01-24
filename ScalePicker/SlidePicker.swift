@@ -244,7 +244,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         isUserInteractionEnabled = true
         
         flowLayout = SlidePickerFlowLayout()
-        flowLayout.update(withDirection: self.isVertical ? UICollectionViewScrollDirection.vertical : UICollectionViewScrollDirection.horizontal)
+        flowLayout.update(withDirection: self.isVertical ? UICollectionView.ScrollDirection.vertical : UICollectionView.ScrollDirection.horizontal)
         
         collectionView = UICollectionView(frame: frame, collectionViewLayout: flowLayout)
         collectionView.delegate = self
@@ -282,7 +282,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     func updateCollectionLayout(){
         flowLayout = SlidePickerFlowLayout()
-        flowLayout.update(withDirection: self.isVertical ? UICollectionViewScrollDirection.vertical : UICollectionViewScrollDirection.horizontal)
+        flowLayout.update(withDirection: self.isVertical ? UICollectionView.ScrollDirection.vertical : UICollectionView.ScrollDirection.horizontal)
         self.collectionView.setCollectionViewLayout(flowLayout, animated: false)
     }
     
@@ -618,19 +618,19 @@ public enum SlidePickerCellType {
 }
 
 open class SlidePickerCell: UICollectionViewCell {
-    open static var signWidth: CGFloat = {
+    public static var signWidth: CGFloat = {
         let sign = "-"
         let maximumTextSize = CGSize(width: 100, height: 100)
         let textString = sign as NSString
         let font = UIFont.systemFont(ofSize: 16.0)
         
         let rect = textString.boundingRect(with: maximumTextSize, options: .usesLineFragmentOrigin,
-                                           attributes: [NSFontAttributeName: font], context: nil)
+                                           attributes: [NSAttributedString.Key.font: font], context: nil)
         
         return (rect.width / 2) + 1
     }()
     
-    open static let strokeWidth: CGFloat = 1.5
+    public static let strokeWidth: CGFloat = 1.5
     
     open var showTickLabels = true
     open var showTicks = true
