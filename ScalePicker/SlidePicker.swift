@@ -438,11 +438,19 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         } else {
             if let values = values {
                 cell.highlightTick = false
-                
+
                 let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
-                let currentValue = values[index]
-                
-                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .bigStroke : .smallStroke, stringValue: self.valueLabels?[Int(currentValue)])
+                let currentValue = index < values.count ? values[index] : 0
+
+                let label: String?
+                let section = indexPath.section - 1
+                if let labels = self.valueLabels, section < labels.count {
+                    label = labels[section]
+                } else {
+                    label = nil
+                }
+
+                cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .bigStroke : .smallStroke, stringValue: label)
             } else {
                 let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
                 
