@@ -595,26 +595,21 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     }
     
     fileprivate func scrollToNearestCellAtPoint(_ point: CGPoint, skipScroll: Bool = false) {
-        var centerCell: SlidePickerCell?
-        
-        let indexPath = collectionView.indexPathForItem(at: point)
-        
-        if let iPath = indexPath {
-            if ((iPath as NSIndexPath).section == 0) || ((iPath as NSIndexPath).section == (sectionsCount - 1)) {
-                return
-            }
-            
-            centerCell = self.collectionView(collectionView, cellForItemAt: iPath) as? SlidePickerCell
+        guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
+        let targetIndexPath: IndexPath
+        if indexPath.row < numberOfTicksBetweenValues / 2 {
+            targetIndexPath = IndexPath(row: 0, section: indexPath.section)
+        } else if indexPath.section < sectionsCount - 1 {
+            targetIndexPath = IndexPath(row: 0, section: indexPath.section + 1)
+        } else {
+            targetIndexPath = IndexPath(row: 0, section: sectionsCount - 1)
         }
-        
-        guard let cell = centerCell else {
-            return
-        }
-        
+        guard let cell = self.collectionView(collectionView, cellForItemAt: targetIndexPath) as? SlidePickerCell else { return }
+
         delegate?.didSelectValue(cell.value)
-        
+
         if !skipScroll {
-            collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: true)
+            collectionView.scrollToItem(at: targetIndexPath, at: .centeredHorizontally, animated: true)
         }
     }
 }
