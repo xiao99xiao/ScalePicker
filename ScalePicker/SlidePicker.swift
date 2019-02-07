@@ -505,28 +505,19 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     open func scrollToValue(_ value: CGFloat, animated: Bool) {
         var indexPath: IndexPath?
-        
-        guard sectionsCount > 0 else {
-            return
-        }
-        
+
+        guard sectionsCount > 0, value <= (values?.last ?? 0) else { return }
+
         if let values = values {
-            var valueIndex = 0
-            
-            for index in 0..<values.count {
-                if value == values[index] {
-                    valueIndex = index
-                    break
-                }
-            }
-            
+            let valueIndex = values.firstIndex(where: {$0 == value}) ?? 0
+
             let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
             let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
-            
-            indexPath = IndexPath(row: row, section: section + 1)
-            
+
+            indexPath = IndexPath(row: row, section: section)
+
             let cell = collectionView(collectionView, cellForItemAt: indexPath!) as? SlidePickerCell
-            
+
             if let cell = cell , cell.value == value {
                 delegate?.didSelectValue(cell.value)
                 collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
