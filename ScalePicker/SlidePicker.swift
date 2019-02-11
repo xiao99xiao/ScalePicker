@@ -511,10 +511,10 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         if let values = values {
             let valueIndex = values.firstIndex(where: {$0 == value}) ?? 0
             
-            let section = (valueIndex / Int(numberOfTicksBetweenValues + 1)) + 1
+            let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
             let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
             
-            indexPath = IndexPath(row: row, section: section)
+            indexPath = IndexPath(row: row, section: section + 1)
             collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
             delegate?.didSelectValue(value)
             
