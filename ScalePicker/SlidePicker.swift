@@ -438,10 +438,10 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
         } else {
             if let values = values {
                 cell.highlightTick = false
-
+                
                 let index = (indexPath.section - 1) * Int(numberOfTicksBetweenValues + 1) + indexPath.row
                 let currentValue = index < values.count ? values[index] : 0
-
+                
                 let label: String?
                 let section = indexPath.section - 1
                 if let labels = self.valueLabels, section < labels.count {
@@ -449,7 +449,7 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
                 } else {
                     label = nil
                 }
-
+                
                 cell.updateValue(currentValue, type: allTicksWithSameSize || indexPath.row == 0 ? .bigStroke : .smallStroke, stringValue: label)
             } else {
                 let currentValue = invertValues ? maxValue - CGFloat(indexPath.section - 1) : minValue + CGFloat(indexPath.section - 1)
@@ -505,23 +505,19 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     
     open func scrollToValue(_ value: CGFloat, animated: Bool) {
         var indexPath: IndexPath?
-
+        
         guard sectionsCount > 0, value <= (values?.last ?? 0) else { return }
-
+        
         if let values = values {
             let valueIndex = values.firstIndex(where: {$0 == value}) ?? 0
-
-            let section = (valueIndex / Int(numberOfTicksBetweenValues + 1))
+            
+            let section = (valueIndex / Int(numberOfTicksBetweenValues + 1)) + 1
             let row = valueIndex - (section * Int(numberOfTicksBetweenValues + 1))
-
+            
             indexPath = IndexPath(row: row, section: section)
-
-            let cell = collectionView(collectionView, cellForItemAt: indexPath!) as? SlidePickerCell
-
-            if let cell = cell , cell.value == value {
-                delegate?.didSelectValue(cell.value)
-                collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
-            }
+            collectionView.scrollToItem(at: indexPath!, at: .centeredHorizontally, animated: animated)
+            delegate?.didSelectValue(value)
+            
         } else {
             if snapEnabled {
                 for i in 1..<sectionsCount {
@@ -588,17 +584,19 @@ open class SlidePicker: UIView, UICollectionViewDelegateFlowLayout, UICollection
     fileprivate func scrollToNearestCellAtPoint(_ point: CGPoint, skipScroll: Bool = false) {
         guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
         let targetIndexPath: IndexPath
-        if indexPath.row < numberOfTicksBetweenValues / 2 {
+        if indexPath.section == 0 {
+            targetIndexPath = IndexPath(row: 0, section: 1)
+        } else if indexPath.row < numberOfTicksBetweenValues / 2 {
             targetIndexPath = IndexPath(row: 0, section: indexPath.section)
-        } else if indexPath.section < sectionsCount - 1 {
+        } else if indexPath.section < sectionsCount - 2 {
             targetIndexPath = IndexPath(row: 0, section: indexPath.section + 1)
         } else {
-            targetIndexPath = IndexPath(row: 0, section: sectionsCount - 1)
+            targetIndexPath = IndexPath(row: 0, section: sectionsCount - 2)
         }
         guard let cell = self.collectionView(collectionView, cellForItemAt: targetIndexPath) as? SlidePickerCell else { return }
-
+        
         delegate?.didSelectValue(cell.value)
-
+        
         if !skipScroll {
             collectionView.scrollToItem(at: targetIndexPath, at: .centeredHorizontally, animated: true)
         }
