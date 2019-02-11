@@ -709,7 +709,7 @@ open class SlidePickerCell: UICollectionViewCell {
         strokeView.layer.cornerRadius = strokeWidth / 2
         
         valueLabel.textAlignment = .center
-        valueLabel.font = UIFont.systemFont(ofSize: 18.0)
+        valueLabel.font = UIFont.systemFont(ofSize: 15.0)
         valueLabel.textColor = UIColor.white
         valueLabel.alpha = 0.0
         
