@@ -779,7 +779,7 @@ open class SlidePickerCell: UICollectionViewCell {
 }
 
 internal extension UIImage {
-    internal func tintImage(_ color: UIColor) -> UIImage {
+    func tintImage(_ color: UIColor) -> UIImage {
         let scale: CGFloat = 2.0
         
         UIGraphicsBeginImageContextWithOptions(size, false, scale)

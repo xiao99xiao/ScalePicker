@@ -149,19 +149,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Dmitry Klimkin";
 				TargetAttributes = {
 					0A3517B11C96767200C58C96 = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = 7L3PQWQB53;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = 0A3517AD1C96767200C58C96 /* Build configuration list for PBXProject "ScalePickerDemo" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -372,7 +372,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dklimkin.ScalePicker;
 				PRODUCT_NAME = ScalePickerDemo;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/ScalePicker/ScalePicker-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
 			};
 			name = Debug;
@@ -390,7 +390,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dklimkin.ScalePicker;
 				PRODUCT_NAME = ScalePickerDemo;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/ScalePicker/ScalePicker-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				USER_HEADER_SEARCH_PATHS = "$(inherited) $(PROJECT_DIR)/**";
 			};
 			name = Release;
